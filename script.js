@@ -1,55 +1,56 @@
-/* Algemene styling */
-body {
-  font-family: 'Montserrat', sans-serif;
-  background-color: #ebe5dc;
-  color: #4d4d4d;
-  text-align: center;
-  margin: 0;
+const italianWords = [
+  "albero", "regalo", "Babbo Natale", "panettone", "presepe",
+  "stella", "campana", "neve", "candela", "angelo",
+  "albero", "regalo", "Babbo Natale", "panettone", "presepe",
+  "stella", "campana", "neve", "candela", "angelo"
+];
+
+let flippedCards = [];
+let matchedCards = [];
+
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
 }
 
-header {
-  padding: 20px 0;
+function createBoard() {
+  shuffle(italianWords);
+  const board = document.getElementById("game-board");
+
+  italianWords.forEach(word => {
+    const card = document.createElement("div");
+    card.classList.add("card");
+    card.dataset.name = word;
+    card.addEventListener("click", flipCard);
+    board.appendChild(card);
+  });
 }
 
-.logo {
-  width: 150px;
-  margin-bottom: 10px;
+function flipCard() {
+  if (this.classList.contains("flipped")) return;
+
+  this.classList.add("flipped");
+  this.textContent = this.dataset.name;
+  flippedCards.push(this);
+
+  if (flippedCards.length === 2) {
+    setTimeout(checkMatch, 800);
+  }
 }
 
-h1 {
-  font-family: 'Your-Italian-Script-Font', serif;
-  color: #9c1925;
+function checkMatch() {
+  const [card1, card2] = flippedCards;
+
+  if (card1.dataset.name !== card2.dataset.name) {
+    card1.classList.remove("flipped");
+    card2.classList.remove("flipped");
+    card1.textContent = "";
+    card2.textContent = "";
+  }
+
+  flippedCards = [];
 }
 
-#game-board {
-  display: grid;
-  grid-template-columns: repeat(5, 100px);
-  grid-gap: 10px;
-  justify-content: center;
-  margin: 20px auto;
-}
-
-.card {
-  width: 100px;
-  height: 100px;
-  background-color: #e6ded0;
-  color: transparent;
-  border: 2px solid #9c1925;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1em;
-  cursor: pointer;
-  border-radius: 8px;
-}
-
-.card.flipped {
-  background-color: #9c1925;
-  color: #fff;
-}
-
-footer {
-  background-color: #9c1925;
-  color: #e6ded0;
-  padding: 10px;
-}
+createBoard();
