@@ -1,79 +1,106 @@
-const italianWords = [
-  "albero", "regalo", "Babbo Natale", "panettone", "presepe",
-  "stella", "campana", "neve", "candela", "angelo",
-  "albero", "regalo", "Babbo Natale", "panettone", "presepe",
-  "stella", "campana", "neve", "candela", "angelo",
-  "renna", "renna", "fiocco", "fiocco", "calza"
-];
-
-let flippedCards = [];
-let matchedCards = [];
-let moves = 0; // Tel het aantal beurten
-
-// Kaarten schudden
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
+/* Algemene reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-// Bord maken
-function createBoard() {
-  shuffle(italianWords);
-  const board = document.getElementById("game-board");
-  board.innerHTML = ""; // Maak het bord leeg
-
-  italianWords.forEach((word) => {
-    const card = document.createElement("div");
-    card.classList.add("card");
-    card.dataset.name = word;
-
-    const front = document.createElement("div");
-    front.classList.add("front");
-
-    const back = document.createElement("div");
-    back.classList.add("back");
-    back.textContent = word; // Plaats het woord op de achterkant
-
-    card.appendChild(front);
-    card.appendChild(back);
-
-    card.addEventListener("click", flipCard);
-    board.appendChild(card);
-  });
+/* Body en algemene styling */
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: #ebe5dc; /* Zachte achtergrond */
+  color: #4d4d4d;
+  text-align: center;
 }
 
-// Kaart omdraaien
-function flipCard() {
-  if (this.classList.contains("flipped") || flippedCards.length >= 2) return;
-
-  this.classList.add("flipped");
-  flippedCards.push(this);
-
-  if (flippedCards.length === 2) {
-    moves++; // Tel de beurt
-    setTimeout(checkMatch, 800);
-  }
+/* Header styling */
+header {
+  background-color: #e6ded0; /* Huisstijl beige */
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-// Controleren op match
-function checkMatch() {
-  const [card1, card2] = flippedCards;
-
-  if (card1.dataset.name === card2.dataset.name) {
-    matchedCards.push(card1, card2);
-  } else {
-    card1.classList.remove("flipped");
-    card2.classList.remove("flipped");
-  }
-
-  flippedCards = [];
-
-  if (matchedCards.length === italianWords.length) {
-    setTimeout(() => alert(`🎉 Hai vinto! Buon Natale! 🎄\nBeurten: ${moves}`), 500);
-  }
+.logo-container {
+  margin-bottom: 10px;
 }
 
-// Start het spel
-createBoard();
+.logo {
+  width: 150px;
+}
+
+.title {
+  font-family: 'Your-Italian-Script-Font', serif; /* Speciaal lettertype */
+  font-size: 2.8em;
+  color: #9c1925; /* Diep Italiaans rood */
+}
+
+.subtitle {
+  font-size: 1.2em;
+  color: #4d4d4d;
+}
+
+/* Speelbord */
+#game-board {
+  display: grid;
+  grid-template-columns: repeat(5, 120px);
+  grid-gap: 15px;
+  justify-content: center;
+  margin: 30px auto;
+  max-width: 90%;
+}
+
+/* Kaarten */
+.card {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+  border-radius: 10px;
+}
+
+.card.flipped {
+  transform: rotateY(180deg);
+}
+
+/* Voorkant en achterkant */
+.card .front,
+.card .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.2em;
+  font-weight: bold;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card .front {
+  background-color: #e6ded0; /* Huisstijl beige */
+  color: transparent;
+  background-image: url('kerst-icoon.png'); /* Voeg een kersticoon toe */
+  background-size: 50px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.card .back {
+  background-color: #9c1925; /* Italiaans rood */
+  color: #ffffff;
+  transform: rotateY(180deg);
+}
+
+/* Footer */
+footer {
+  background-color: #9c1925;
+  color: #e6ded0;
+  padding: 10px 0;
+  margin-top: 20px;
+  font-size: 1em;
+}
