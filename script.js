@@ -5,9 +5,9 @@ const italianWords = [
   "stella", "campana", "neve", "candela", "angelo"
 ];
 
-let flippedCards = []; // Hierin slaan we omgedraaide kaarten op
-let matchedCards = []; // Hierin slaan we gevonden paren op
-let lockBoard = false; // Blokkeer extra klikken tijdens het controleren van een match
+let flippedCards = [];
+let matchedCards = [];
+let lockBoard = false; // Voorkomt klikken tijdens het checken
 let moves = 0; // Tel het aantal zetten
 
 // Functie om kaarten te schudden
@@ -18,7 +18,7 @@ function shuffle(array) {
   }
 }
 
-// Bord genereren
+// Bord aanmaken
 function createBoard() {
   shuffle(italianWords);
   const board = document.getElementById("game-board");
@@ -29,10 +29,8 @@ function createBoard() {
     card.classList.add("card");
     card.dataset.name = word;
 
-    // Voor- en achterkant van de kaart
     const front = document.createElement("div");
     front.classList.add("front");
-    front.style.backgroundImage = "url('kerst-icoon.png')"; // Voeg het kersticoon toe
 
     const back = document.createElement("div");
     back.classList.add("back");
@@ -47,19 +45,18 @@ function createBoard() {
 
 // Kaart omdraaien
 function flipCard() {
-  if (lockBoard) return; // Blokkeer extra klikken
-  if (this.classList.contains("flipped")) return; // Geen dubbele clicks op dezelfde kaart
+  if (lockBoard || this.classList.contains("flipped")) return;
 
   this.classList.add("flipped");
   flippedCards.push(this);
 
   if (flippedCards.length === 2) {
-    lockBoard = true; // Blokkeer het bord tijdens controle
+    lockBoard = true;
     setTimeout(checkMatch, 800);
   }
 }
 
-// Controleer of de kaarten matchen
+// Check of kaarten matchen
 function checkMatch() {
   const [card1, card2] = flippedCards;
 
@@ -68,7 +65,6 @@ function checkMatch() {
     card2.removeEventListener("click", flipCard);
     matchedCards.push(card1, card2);
   } else {
-    // Draai de kaarten terug
     card1.classList.remove("flipped");
     card2.classList.remove("flipped");
   }
@@ -76,12 +72,12 @@ function checkMatch() {
   flippedCards = [];
   lockBoard = false;
 
-  // Controleer of alle paren gevonden zijn
+  // Controleer of het spel is gewonnen
   if (matchedCards.length === italianWords.length) {
     setTimeout(() => alert(`🎉 Hai vinto! Buon Natale! 🎄 Zetten: ${moves}`), 500);
   }
 
-  moves++; // Verhoog het aantal zetten
+  moves++;
 }
 
 // Start het spel
