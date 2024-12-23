@@ -37,6 +37,7 @@ h1 {
   text-shadow: 2px 2px #e6ded0;
 }
 
+/* Speelbord */
 #game-board {
   display: grid;
   grid-template-columns: repeat(5, 120px);
@@ -59,6 +60,11 @@ h1 {
 
 .card.flipped {
   transform: rotateY(180deg);
+}
+
+.card.matched {
+  animation: sparkle 1s ease-in-out;
+  border-color: gold;
 }
 
 .card .front,
@@ -88,6 +94,25 @@ h1 {
   font-size: 1em;
   font-weight: bold;
   text-align: center;
+  animation: fadeIn 0.6s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    box-shadow: 0 0 10px gold, 0 0 20px gold;
+  }
+  50% {
+    box-shadow: 0 0 30px gold, 0 0 60px gold;
+  }
 }
 
 /* Progressiebalk */
