@@ -20,6 +20,14 @@
   </div>
   <p class="progress-text" id="progress-text">Begin met spelen om je voortgang te zien!</p>
 
+  <!-- Moeilijkheidsselectie -->
+  <section class="difficulty-select">
+    <h2>Kies een niveau:</h2>
+    <button class="difficulty" data-level="6">Makkelijk</button>
+    <button class="difficulty" data-level="10">Gemiddeld</button>
+    <button class="difficulty" data-level="15">Moeilijk</button>
+  </section>
+
   <!-- Sneeuwanimatie -->
   <div class="snow-container"></div>
 
@@ -27,6 +35,19 @@
   <main>
     <div id="game-board"></div>
   </main>
+
+  <!-- Feedback sectie -->
+  <section id="feedback" class="hidden">
+    <p id="feedback-text"></p>
+  </section>
+
+  <!-- Reflectie en resultaat -->
+  <section id="reflection" class="hidden">
+    <h2>🎉 Gefeliciteerd! 🎉</h2>
+    <p>Je hebt alle woorden gevonden. Hier zijn de woorden die je hebt geleerd:</p>
+    <ul id="learned-words"></ul>
+    <button onclick="resetGame()">Speel opnieuw</button>
+  </section>
 
   <!-- Footer -->
   <footer>
