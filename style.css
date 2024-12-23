@@ -51,6 +51,13 @@ h1 {
   background-color: #b71c2e;
 }
 
+/* Timer */
+#timer-display {
+  margin: 15px;
+  font-size: 1.5em;
+  color: #9c1925;
+}
+
 /* Voortgangsbalk */
 .progress-container {
   width: 80%;
