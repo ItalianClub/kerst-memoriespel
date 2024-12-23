@@ -7,15 +7,14 @@
 
 body {
   font-family: 'Nunito', sans-serif;
-  background-color: #ebe5dc; /* Achtergrondkleur kerstthema */
+  background-color: #ebe5dc;
   color: #4d4d4d;
   text-align: center;
-  overflow-x: hidden; /* Voorkomt horizontale scrollbalken */
 }
 
 /* Header */
 header {
-  background-color: rgba(230, 222, 208, 0.9);
+  background-color: #e6ded0;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -30,11 +29,6 @@ h1 {
   font-family: 'Great Vibes', cursive;
   color: #9c1925;
   text-shadow: 2px 2px #e6ded0;
-}
-
-p {
-  font-size: 1.2em;
-  margin: 10px 0;
 }
 
 /* Moeilijkheidsselectie */
@@ -58,11 +52,6 @@ p {
   background-color: #b71c2e;
 }
 
-.difficulty-select button.active {
-  background-color: #b71c2e;
-  font-weight: bold;
-}
-
 /* Timer */
 #timer-display {
   margin: 15px;
@@ -78,7 +67,6 @@ p {
   background-color: #e6ded0;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .progress-bar {
@@ -97,7 +85,7 @@ p {
 /* Speelbord */
 #game-board {
   display: grid;
-  grid-template-columns: repeat(5, 1fr); /* 5 kolommen */
+  grid-template-columns: repeat(5, 1fr);
   gap: 15px;
   max-width: 600px;
   margin: 20px auto;
@@ -108,10 +96,9 @@ p {
   transform-style: preserve-3d;
   transition: transform 0.6s ease;
   cursor: pointer;
-  aspect-ratio: 1 / 1; /* Vierkante kaarten */
+  aspect-ratio: 1 / 1;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .card .front,
@@ -125,7 +112,7 @@ p {
 }
 
 .card .front {
-  background-image: url('kerst-icoon.png'); /* Zorgt voor de kerstafbeelding */
+  background-image: url('kerst-icoon.png');
   background-size: cover;
   background-position: center;
 }
@@ -137,9 +124,7 @@ p {
   align-items: center;
   justify-content: center;
   font-size: 1.2em;
-  font-weight: bold;
   text-align: center;
-  padding: 10px;
   transform: rotateY(180deg);
 }
 
@@ -203,45 +188,13 @@ p {
   }
 }
 
-/* Reset-knoppen */
-#reset-game,
-#reset-from-reflection {
-  background-color: #9c1925;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  margin: 20px auto;
-  font-size: 1.2em;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-#reset-game:hover,
-#reset-from-reflection:hover {
-  background-color: #b71c2e;
-}
-
 /* Responsiviteit */
 @media (max-width: 600px) {
   #game-board {
-    grid-template-columns: repeat(2, 1fr); /* Twee kolommen voor mobiel */
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .card {
-    padding-bottom: 120%; /* Grotere kaarten op kleinere schermen */
-  }
-
-  #timer-display {
-    font-size: 1.2em;
-  }
-
-  #progress-text {
-    font-size: 1em;
-  }
-
-  #reset-game,
-  #reset-from-reflection {
-    font-size: 1em;
+    padding-bottom: 120%;
   }
 }
