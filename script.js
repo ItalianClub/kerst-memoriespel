@@ -123,7 +123,7 @@ function flipCard(card) {
   }
 }
 
-// Verbeterde match controleren
+// Match controleren
 function checkMatch() {
   const [card1, card2] = flippedCards;
 
@@ -131,8 +131,10 @@ function checkMatch() {
     // Match gevonden
     matchedPairs++;
     flippedCards = [];
-    card1.removeEventListener("click", () => flipCard(card1));
-    card2.removeEventListener("click", () => flipCard(card2));
+    card1.removeEventListener("click", flipCard);
+    card2.removeEventListener("click", flipCard);
+    card1.classList.add("matched");
+    card2.classList.add("matched");
 
     // Voortgang bijwerken
     updateProgress(matchedPairs);
@@ -183,10 +185,9 @@ function updateTimerDisplay() {
 function showReflection() {
   const reflection = document.getElementById("reflection");
   const learnedList = document.getElementById("learned-words");
-  const cards = document.querySelectorAll(".card");
+  const cards = document.querySelectorAll(".card.matched");
 
   learnedList.innerHTML = Array.from(cards)
-    .filter(card => card.classList.contains("flipped"))
     .map(card => `<li>${card.dataset.value}</li>`)
     .join("");
   reflection.classList.remove("hidden");
