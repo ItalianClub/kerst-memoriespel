@@ -84,6 +84,7 @@ function startGame(level) {
 
   updateProgress(0);
   initializeSnow();
+  document.getElementById("reset-game").classList.remove("hidden");
 }
 
 // Genereer kaarten (Nederlands en Italiaans)
@@ -190,6 +191,17 @@ function initializeSnow() {
     snowContainer.appendChild(snowflake);
   }
 }
+
+// Voeg de reset-functionaliteit toe
+document.getElementById("reset-game").addEventListener("click", () => {
+  const level = document.querySelector(".difficulty-select button.active")?.dataset.level || "makkelijk";
+  startGame(level);
+});
+
+document.getElementById("reset-from-reflection").addEventListener("click", () => {
+  startGame("makkelijk");
+  document.getElementById("reflection").classList.add("hidden");
+});
 
 // Eventlisteners voor moeilijkheidsselectie
 document.querySelectorAll(".difficulty-select button").forEach(button => {
