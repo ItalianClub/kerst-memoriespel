@@ -36,84 +36,6 @@ h1 {
   text-shadow: 2px 2px #e6ded0;
 }
 
-/* Speelbord */
-#game-board {
-  display: grid;
-  grid-template-columns: repeat(5, 120px);
-  grid-gap: 15px;
-  justify-content: center;
-  margin: 30px auto;
-}
-
-.card {
-  position: relative;
-  width: 120px;
-  height: 120px;
-  cursor: pointer;
-  transform-style: preserve-3d;
-  transition: transform 0.6s ease;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 2px solid #9c1925;
-}
-
-.card.flipped {
-  transform: rotateY(180deg);
-}
-
-.card.matched {
-  animation: sparkle 1s ease-in-out;
-  border-color: gold;
-}
-
-.card .front,
-.card .back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
-
-.card .front {
-  background-color: #e6ded0;
-  background-image: url('kerstboom-icoon.png');
-  background-size: cover;
-  background-position: center;
-}
-
-.card .back {
-  background-color: #9c1925;
-  color: #ffffff;
-  transform: rotateY(180deg);
-  font-size: 1em;
-  font-weight: bold;
-  text-align: center;
-  animation: fadeIn 0.6s ease-in;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes sparkle {
-  0%, 100% {
-    box-shadow: 0 0 10px gold, 0 0 20px gold;
-  }
-  50% {
-    box-shadow: 0 0 30px gold, 0 0 60px gold;
-  }
-}
-
 /* Progressiebalk */
 .progress-container {
   width: 80%;
@@ -139,35 +61,69 @@ h1 {
   text-align: center;
 }
 
-/* Sneeuwanimatie */
-.snow-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
+/* Feedback sectie */
+#feedback {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #9c1925;
+  color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  opacity: 0;
+  animation: fadeOut 2s forwards;
 }
 
-.snowflake {
-  position: absolute;
-  top: -10px;
-  background-color: #ffffff;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  animation: fall 10s linear infinite, sway 3s ease-in-out infinite;
+#feedback-text {
+  font-size: 1.2em;
 }
 
-@keyframes fall {
+/* Reflectie */
+#reflection {
+  animation: fadeIn 1s ease-in-out;
+}
+
+.hidden {
+  display: none;
+}
+
+.difficulty-select {
+  margin: 20px;
+}
+
+.difficulty {
+  background-color: #9c1925;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  margin: 5px;
+  cursor: pointer;
+  font-size: 1.2em;
+}
+
+.difficulty:hover {
+  background-color: #b71c2e;
+}
+
+/* Keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
   to {
-    transform: translateY(100vh);
+    opacity: 1;
   }
 }
 
-@keyframes sway {
-  50% {
-    transform: translateX(20px);
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
