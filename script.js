@@ -1,4 +1,3 @@
-// Woordenlijsten per niveau
 const easyWords = [
   { word: "Kerstboom", translation: "albero" },
   { word: "Cadeau", translation: "regalo" },
@@ -52,16 +51,14 @@ function getWords(level) {
 // Start het spel
 function startGame(level) {
   const words = getWords(level);
-  const pairs = generatePairs(words); // Genereer unieke kaartparen
-  const cards = shuffle([...pairs, ...pairs]); // Dubbele set kaarten voor matching
+  const cards = shuffle([...generateCards(words)]);
   const gameBoard = document.getElementById("game-board");
-  gameBoard.innerHTML = ""; // Leeg het bord
+  gameBoard.innerHTML = ""; // Maak het bord leeg
   matchedPairs = 0;
   flippedCards = [];
-  totalPairs = pairs.length;
+  totalPairs = words.length;
 
-  // Genereer kaarten
-  cards.forEach(({ word, translation }) => {
+  cards.forEach(({ word, translation, isTranslation }) => {
     const card = document.createElement("div");
     card.classList.add("card");
 
@@ -70,31 +67,41 @@ function startGame(level) {
 
     const back = document.createElement("div");
     back.classList.add("back");
-    back.textContent = word; // Nederlandse of Italiaanse tekst
+    back.textContent = isTranslation ? translation : word;
 
     card.append(front, back);
     gameBoard.appendChild(card);
 
-    card.addEventListener("click", () => flipCard(card, word, translation));
+    card.addEventListener("click", () => flipCard(card, isTranslation ? translation : word));
   });
 
   updateProgress(0);
-  initializeSnow(); // Start sneeuwanimatie
 }
 
-// Kaarten genereren voor uniek paar
-function generatePairs(words) {
-  return words.map(pair => ({
-    word: pair.word,
-    translation: pair.translation
-  }));
+// Genereer kaarten met Nederlands en Italiaanse woorden
+function generateCards(words) {
+  const cards = [];
+  words.forEach(({ word, translation }) => {
+    cards.push({ word, translation, isTranslation: false });
+    cards.push({ word, translation, isTranslation: true });
+  });
+  return cards;
 }
 
-// Kaart omdraaien
-function flipCard(card, word, translation) {
+// Schud kaarten
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+// Kaarten omdraaien
+function flipCard(card, value) {
   if (flippedCards.length < 2 && !card.classList.contains("flipped")) {
     card.classList.add("flipped");
-    flippedCards.push({ card, word, translation });
+    flippedCards.push({ card, value });
 
     if (flippedCards.length === 2) {
       setTimeout(checkMatch, 800);
@@ -104,19 +111,19 @@ function flipCard(card, word, translation) {
 
 // Check of twee kaarten een match zijn
 function checkMatch() {
-  const [firstCard, secondCard] = flippedCards;
+  const [card1, card2] = flippedCards;
 
-  if (firstCard.translation === secondCard.word || firstCard.word === secondCard.translation) {
+  if (card1.value === card2.value) {
     matchedPairs++;
     flippedCards = [];
     updateProgress(matchedPairs);
 
     if (matchedPairs === totalPairs) {
-      setTimeout(() => showReflection(), 1000);
+      setTimeout(showReflection, 1000);
     }
   } else {
-    firstCard.card.classList.remove("flipped");
-    secondCard.card.classList.remove("flipped");
+    card1.card.classList.remove("flipped");
+    card2.card.classList.remove("flipped");
     flippedCards = [];
   }
 }
@@ -144,31 +151,6 @@ function showReflection() {
   reflection.classList.remove("hidden");
 }
 
-// Schud de kaarten
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
-
-// Sneeuwanimatie initialiseren
-function initializeSnow() {
-  const snowContainer = document.querySelector(".snow-container");
-  snowContainer.innerHTML = ""; // Reset sneeuw
-  for (let i = 0; i < 50; i++) {
-    const snowflake = document.createElement("div");
-    snowflake.classList.add("snowflake");
-    snowflake.style.left = `${Math.random() * 100}%`;
-    snowflake.style.animationDelay = `${Math.random() * 5}s`;
-    snowflake.style.animationDuration = `${5 + Math.random() * 5}s`;
-    snowflake.style.opacity = `${Math.random()}`;
-    snowflake.style.transform = `scale(${Math.random()})`;
-    snowContainer.appendChild(snowflake);
-  }
-}
-
 // Eventlisteners voor moeilijkheidsselectie
 document.querySelectorAll(".difficulty-select button").forEach(button => {
   button.addEventListener("click", () => {
@@ -177,7 +159,7 @@ document.querySelectorAll(".difficulty-select button").forEach(button => {
   });
 });
 
-// Start standaard met het makkelijke niveau
+// Standaard starten met het makkelijke niveau
 document.addEventListener("DOMContentLoaded", () => {
   startGame("makkelijk");
 });
