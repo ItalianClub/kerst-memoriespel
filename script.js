@@ -40,19 +40,26 @@ function getWords(level) {
 }
 
 function startGame(level) {
-  clearInterval(timerInterval);
+  clearInterval(timerInterval); // Stop eventuele lopende timers
   const words = getWords(level);
+
+  if (words.length === 0) {
+    alert("Geen woorden beschikbaar voor dit niveau!");
+    return;
+  }
+
   const cards = shuffle(generateCards(words));
   const gameBoard = document.getElementById("game-board");
-  gameBoard.innerHTML = "";
+  gameBoard.innerHTML = ""; // Reset speelbord
   flippedCards = [];
   matchedPairs = 0;
   totalPairs = words.length;
-  timeLeft = 120;
 
+  timeLeft = 120; // Timer reset
   updateTimerDisplay();
   timerInterval = setInterval(updateTimer, 1000);
 
+  // Voeg kaarten toe aan het speelbord
   cards.forEach(({ value, isTranslation }) => {
     const card = document.createElement("div");
     card.classList.add("card");
@@ -67,14 +74,18 @@ function startGame(level) {
     card.append(front, back);
     gameBoard.appendChild(card);
 
+    // Instellen van kaartinformatie
     card.dataset.value = value;
     card.dataset.isTranslation = isTranslation;
 
+    // Voeg klikfunctionaliteit toe
     card.addEventListener("click", () => flipCard(card));
   });
 
-  updateProgress(0);
+  updateProgress(0); // Reset voortgangsbalk
   document.getElementById("reset-game").classList.remove("hidden");
+
+  console.log("Gegenereerde kaarten:", cards);
 }
 
 function generateCards(words) {
@@ -187,5 +198,5 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  startGame("makkelijk");
+  startGame("makkelijk"); // Start standaard met makkelijk niveau
 });
