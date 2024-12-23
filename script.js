@@ -48,6 +48,8 @@ function getWords(level) {
   if (level === "makkelijk") return easyWords;
   if (level === "gemiddeld") return mediumWords;
   if (level === "moeilijk") return hardWords;
+  console.error("Onbekend niveau:", level);
+  return [];
 }
 
 // Start het spel
@@ -91,14 +93,15 @@ function startGame(level) {
   });
 
   updateProgress(0); // Reset voortgangsbalk
+  initializeSnow(); // Voeg sneeuw toe
   document.getElementById("reset-game").classList.remove("hidden");
 }
 
 // Genereer kaarten
 function generateCards(words) {
   return words.flatMap(({ word, translation }) => [
-    { value: word, isTranslation: false },
-    { value: translation, isTranslation: true }
+    { value: word, isTranslation: "false" },
+    { value: translation, isTranslation: "true" }
   ]);
 }
 
@@ -131,7 +134,6 @@ function checkMatch() {
     card1.dataset.value === card2.dataset.value &&
     card1.dataset.isTranslation !== card2.dataset.isTranslation
   ) {
-    // Match gevonden
     matchedPairs++;
     flippedCards = [];
     card1.removeEventListener("click", flipCard);
@@ -139,16 +141,13 @@ function checkMatch() {
     card1.classList.add("matched");
     card2.classList.add("matched");
 
-    // Voortgang bijwerken
     updateProgress(matchedPairs);
 
-    // Controleer of het spel is voltooid
     if (matchedPairs === totalPairs) {
-      clearInterval(timerInterval); // Stop de timer
+      clearInterval(timerInterval);
       setTimeout(showReflection, 1000);
     }
   } else {
-    // Geen match, draai kaarten terug
     setTimeout(() => {
       card1.classList.remove("flipped");
       card2.classList.remove("flipped");
@@ -196,7 +195,24 @@ function showReflection() {
   reflection.classList.remove("hidden");
 }
 
-// Voeg reset-functionaliteit toe
+// Sneeuw animatie
+function initializeSnow() {
+  const snowContainer = document.createElement("div");
+  snowContainer.id = "snow-container";
+  document.body.appendChild(snowContainer);
+
+  for (let i = 0; i < 50; i++) {
+    const snowflake = document.createElement("div");
+    snowflake.classList.add("snowflake");
+    snowflake.textContent = "❄";
+    snowflake.style.left = `${Math.random() * 100}vw`;
+    snowflake.style.animationDelay = `${Math.random() * 5}s`;
+    snowflake.style.fontSize = `${Math.random() * 1.5 + 0.5}em`;
+    snowContainer.appendChild(snowflake);
+  }
+}
+
+// Reset-functionaliteit
 document.getElementById("reset-game").addEventListener("click", () => {
   const level = document.querySelector(".difficulty-select button.active")?.dataset.level || "makkelijk";
   startGame(level);
