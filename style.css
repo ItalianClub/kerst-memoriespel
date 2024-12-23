@@ -7,7 +7,8 @@
 
 body {
   font-family: 'Montserrat', sans-serif;
-  background-color: #ebe5dc;
+  background-color: #ebe5dc; /* Zacht kerstbeige */
+  color: #4d4d4d;
   text-align: center;
 }
 
@@ -15,18 +16,41 @@ body {
 header {
   background-color: rgba(230, 222, 208, 0.9);
   padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .logo {
   width: 150px;
+  margin-bottom: 10px;
 }
 
 h1 {
   font-size: 2.5em;
-  color: #9c1925;
+  color: #9c1925; /* Kerstrood */
+  text-shadow: 2px 2px #e6ded0;
 }
 
-/* Progressiebalk */
+/* Moeilijkheidsselectie */
+.difficulty-select {
+  margin: 20px;
+}
+
+.difficulty-select button {
+  background-color: #9c1925;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  margin: 5px;
+  cursor: pointer;
+  font-size: 1.2em;
+}
+
+.difficulty-select button:hover {
+  background-color: #b71c2e;
+}
+
+/* Voortgangsbalk */
 .progress-container {
   width: 80%;
   height: 20px;
@@ -43,7 +67,7 @@ h1 {
   transition: width 0.5s ease;
 }
 
-.progress-text {
+#progress-text {
   margin-top: 10px;
   font-size: 1.2em;
   color: #9c1925;
@@ -52,10 +76,10 @@ h1 {
 /* Speelbord */
 #game-board {
   display: grid;
-  grid-gap: 15px;
-  margin: 20px auto;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 15px;
   max-width: 600px;
+  margin: 20px auto;
 }
 
 .card {
@@ -64,19 +88,24 @@ h1 {
   transition: transform 0.6s ease;
   cursor: pointer;
   padding-bottom: 100%; /* 1:1 aspect ratio */
+  border-radius: 10px;
+  border: 2px solid #9c1925;
 }
 
 .card .front,
 .card .back {
   position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   backface-visibility: hidden;
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
 .card .front {
-  background-image: url('kerstboom-icoon.png');
+  background-color: #e6ded0;
+  background-image: url('kerstboom-icoon.png'); /* Voorkant: kerstafbeelding */
   background-size: cover;
   background-position: center;
 }
@@ -91,11 +120,15 @@ h1 {
   transform: rotateY(180deg);
 }
 
-.card.flipped {
+.card.flipped .front {
   transform: rotateY(180deg);
 }
 
-/* Reflectie */
+.card.flipped .back {
+  transform: rotateY(0deg);
+}
+
+/* Reflectiepagina */
 #reflection {
   display: none;
   animation: fadeIn 1s ease-in-out;
@@ -114,7 +147,7 @@ h1 {
   }
 }
 
-/* Sneeuw */
+/* Sneeuwanimatie */
 .snow-container {
   position: fixed;
   top: 0;
@@ -147,11 +180,13 @@ h1 {
   }
 }
 
+/* Responsiviteit */
 @media (max-width: 400px) {
   #game-board {
     grid-template-columns: repeat(2, 1fr); /* 2 kolommen */
   }
+
   .card {
-    padding-bottom: 70%; /* Grotere kaarten */
+    padding-bottom: 120%; /* Grotere kaarten voor kleine schermen */
   }
 }
