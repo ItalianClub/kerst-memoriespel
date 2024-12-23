@@ -1,40 +1,41 @@
+// Woordenlijsten per niveau
 const easyWords = [
-  { word: "albero", translation: "Kerstboom" },
-  { word: "regalo", translation: "Cadeau" },
-  { word: "stella", translation: "Ster" },
-  { word: "neve", translation: "Sneeuw" },
-  { word: "candela", translation: "Kaars" },
-  { word: "angelo", translation: "Engel" },
-  { word: "festa", translation: "Feest" },
-  { word: "gioia", translation: "Vreugde" },
-  { word: "amicizia", translation: "Vriendschap" },
-  { word: "amore", translation: "Liefde" }
+  { word: "Kerstboom", translation: "albero" },
+  { word: "Cadeau", translation: "regalo" },
+  { word: "Ster", translation: "stella" },
+  { word: "Sneeuw", translation: "neve" },
+  { word: "Kaars", translation: "candela" },
+  { word: "Engel", translation: "angelo" },
+  { word: "Feest", translation: "festa" },
+  { word: "Vreugde", translation: "gioia" },
+  { word: "Vriendschap", translation: "amicizia" },
+  { word: "Liefde", translation: "amore" }
 ];
 
 const mediumWords = [
-  { word: "Babbo Natale", translation: "Kerstman" },
-  { word: "panettone", translation: "Kerstbrood" },
-  { word: "campana", translation: "Bel" },
-  { word: "presepe", translation: "Kerststal" },
-  { word: "addobbi", translation: "Versieringen" },
-  { word: "famiglia", translation: "Familie" },
-  { word: "neve artificiale", translation: "Kunstsneeuw" },
-  { word: "luminarie", translation: "Lichtjes" },
-  { word: "vigilia", translation: "Kerstavond" },
-  { word: "auguri", translation: "Wensen" }
+  { word: "Kerstman", translation: "Babbo Natale" },
+  { word: "Kerstbrood", translation: "panettone" },
+  { word: "Bel", translation: "campana" },
+  { word: "Kerststal", translation: "presepe" },
+  { word: "Versieringen", translation: "addobbi" },
+  { word: "Familie", translation: "famiglia" },
+  { word: "Kunstsneeuw", translation: "neve artificiale" },
+  { word: "Lichtjes", translation: "luminarie" },
+  { word: "Kerstavond", translation: "vigilia" },
+  { word: "Wensen", translation: "auguri" }
 ];
 
 const hardWords = [
-  { word: "cenone", translation: "Kerstmaal" },
-  { word: "zampone", translation: "Gevulde varkenspoot" },
-  { word: "slitta", translation: "Slede" },
-  { word: "renna", translation: "Rendier" },
-  { word: "festività", translation: "Feestdagen" },
-  { word: "tradizione", translation: "Traditie" },
-  { word: "Natale", translation: "Kerstmis" },
-  { word: "dolce", translation: "Dessert" },
-  { word: "auguri di Natale", translation: "Kerstwensen" },
-  { word: "pupazzo di neve", translation: "Sneeuwpop" }
+  { word: "Kerstmaal", translation: "cenone" },
+  { word: "Gevulde varkenspoot", translation: "zampone" },
+  { word: "Slede", translation: "slitta" },
+  { word: "Rendier", translation: "renna" },
+  { word: "Feestdagen", translation: "festività" },
+  { word: "Traditie", translation: "tradizione" },
+  { word: "Kerstmis", translation: "Natale" },
+  { word: "Dessert", translation: "dolce" },
+  { word: "Kerstwensen", translation: "auguri di Natale" },
+  { word: "Sneeuwpop", translation: "pupazzo di neve" }
 ];
 
 let flippedCards = [];
@@ -68,7 +69,7 @@ function startGame(level) {
 
     const back = document.createElement("div");
     back.classList.add("back");
-    back.innerHTML = `<p>${word}</p><small>${translation}</small>`;
+    back.textContent = word; // Nederlands of Italiaans woord
 
     card.append(front, back);
     gameBoard.appendChild(card);
@@ -95,7 +96,10 @@ function flipCard(card) {
 function checkMatch() {
   const [card1, card2] = flippedCards;
 
-  if (card1.querySelector(".back").innerHTML === card2.querySelector(".back").innerHTML) {
+  if (
+    card1.querySelector(".back").textContent ===
+    card2.querySelector(".back").textContent
+  ) {
     matchedPairs++;
     flippedCards = [];
     updateProgress(matchedPairs);
@@ -128,7 +132,7 @@ function showReflection() {
 
   learnedList.innerHTML = Array.from(cards)
     .filter(card => card.classList.contains("flipped"))
-    .map(card => `<li>${card.querySelector(".back").innerHTML}</li>`)
+    .map(card => `<li>${card.querySelector(".back").textContent}</li>`)
     .join("");
   reflection.classList.remove("hidden");
 }
