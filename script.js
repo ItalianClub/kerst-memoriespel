@@ -1,14 +1,8 @@
 const italianWords = [
-  { it: "albero", nl: "Boom" },
-  { it: "regalo", nl: "Cadeau" },
-  { it: "Babbo Natale", nl: "Kerstman" },
-  { it: "panettone", nl: "Kerstbrood" },
-  { it: "presepe", nl: "Kerststal" },
-  { it: "stella", nl: "Ster" },
-  { it: "campana", nl: "Kerstbel" },
-  { it: "neve", nl: "Sneeuw" },
-  { it: "candela", nl: "Kaars" },
-  { it: "angelo", nl: "Engel" }
+  "albero", "regalo", "Babbo Natale", "panettone", "presepe",
+  "stella", "campana", "neve", "candela", "angelo",
+  "albero", "regalo", "Babbo Natale", "panettone", "presepe",
+  "stella", "campana", "neve", "candela", "angelo"
 ];
 
 let flippedCards = [];
@@ -16,7 +10,7 @@ let matchedCards = [];
 let matchedPairs = 0;
 let lockBoard = false;
 
-// Sneeuw aanmaken
+// Voeg sneeuw toe
 function createSnow() {
   const snowContainer = document.querySelector(".snow-container");
 
@@ -29,7 +23,7 @@ function createSnow() {
   }
 }
 
-// Schud de kaarten
+// Kaarten schudden
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -37,7 +31,7 @@ function shuffle(array) {
   }
 }
 
-// Bord aanmaken
+// Bord maken
 function createBoard() {
   shuffle(italianWords);
   const board = document.getElementById("game-board");
@@ -46,14 +40,14 @@ function createBoard() {
   italianWords.forEach((word) => {
     const card = document.createElement("div");
     card.classList.add("card");
-    card.dataset.name = word.it;
+    card.dataset.name = word;
 
     const front = document.createElement("div");
     front.classList.add("front");
 
     const back = document.createElement("div");
     back.classList.add("back");
-    back.innerHTML = `<strong>${word.it}</strong><br><small>${word.nl}</small>`;
+    back.textContent = word;
 
     card.appendChild(front);
     card.appendChild(back);
@@ -62,7 +56,7 @@ function createBoard() {
   });
 }
 
-// Kaarten omdraaien
+// Kaart draaien
 function flipCard() {
   if (lockBoard || this.classList.contains("flipped")) return;
 
@@ -80,6 +74,8 @@ function checkMatch() {
   const [card1, card2] = flippedCards;
 
   if (card1.dataset.name === card2.dataset.name) {
+    card1.classList.add("matched");
+    card2.classList.add("matched");
     card1.removeEventListener("click", flipCard);
     card2.removeEventListener("click", flipCard);
     matchedCards.push(card1, card2);
@@ -93,7 +89,7 @@ function checkMatch() {
   flippedCards = [];
   lockBoard = false;
 
-  if (matchedCards.length === italianWords.length * 2) {
+  if (matchedCards.length === italianWords.length) {
     setTimeout(() => alert("🎉 Hai vinto! Buon Natale! 🎄"), 500);
   }
 }
@@ -103,7 +99,7 @@ function updateProgressBar() {
   const progressBar = document.getElementById("progress-bar");
   const progressText = document.getElementById("progress-text");
 
-  const totalPairs = italianWords.length;
+  const totalPairs = italianWords.length / 2;
   const progress = (matchedPairs / totalPairs) * 100;
 
   progressBar.style.width = `${progress}%`;
@@ -119,6 +115,6 @@ function updateProgressBar() {
   }
 }
 
-// Start het spel
+// Start spel
 createBoard();
 createSnow();
