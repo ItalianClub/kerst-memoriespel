@@ -13,85 +13,70 @@ const italianWords = [
 
 let flippedCards = [];
 let matchedCards = [];
-let lockBoard = false;
-let selectedLevel = 10;
+let matchedPairs = 0;
 
-document.querySelectorAll(".difficulty").forEach(button => {
-  button.addEventListener("click", () => {
-    selectedLevel = parseInt(button.dataset.level);
-    startGame();
-  });
-});
+function startGame() {
+  const gameBoard = document.getElementById("game-board");
+  const resetButton = document.getElementById("reset-game");
+  resetButton.classList.add("hidden");
+  const cards = shuffle([...italianWords, ...italianWords]);
+  gameBoard.innerHTML = "";
+  matchedCards = [];
+  matchedPairs = 0;
 
-function createBoard(words) {
-  shuffle(words);
-  const board = document.getElementById("game-board");
-  board.innerHTML = "";
-
-  words.forEach(({ word, translation }) => {
+  cards.forEach(({ word, translation }) => {
     const card = document.createElement("div");
     card.classList.add("card");
-    card.dataset.name = word;
+    card.dataset.word = word;
 
     const front = document.createElement("div");
     front.classList.add("front");
 
     const back = document.createElement("div");
     back.classList.add("back");
-    back.innerHTML = `
-      <p>${word}</p>
-      <small>${translation}</small>
-    `;
+    back.innerHTML = `<p>${word}</p><small>${translation}</small>`;
 
-    card.appendChild(front);
-    card.appendChild(back);
-    card.addEventListener("click", flipCard);
-    board.appendChild(card);
+    card.append(front, back);
+    card.addEventListener("click", () => flipCard(card));
+    gameBoard.appendChild(card);
   });
+
+  updateProgress(0);
 }
 
-function flipCard() {
-  if (lockBoard || this.classList.contains("flipped")) return;
+function flipCard(card) {
+  if (flippedCards.length < 2 && !card.classList.contains("flipped")) {
+    card.classList.add("flipped");
+    flippedCards.push(card);
 
-  this.classList.add("flipped");
-  flippedCards.push(this);
-
-  if (flippedCards.length === 2) {
-    lockBoard = true;
-    setTimeout(checkMatch, 800);
+    if (flippedCards.length === 2) {
+      setTimeout(checkMatch, 1000);
+    }
   }
 }
 
 function checkMatch() {
   const [card1, card2] = flippedCards;
 
-  if (card1.dataset.name === card2.dataset.name) {
+  if (card1.dataset.word === card2.dataset.word) {
     matchedCards.push(card1, card2);
-    showFeedback("Fantastico! Een match gevonden!");
+    matchedPairs++;
+    updateProgress(matchedPairs / italianWords.length);
   } else {
     card1.classList.remove("flipped");
     card2.classList.remove("flipped");
   }
 
   flippedCards = [];
-  lockBoard = false;
+  if (matchedPairs === italianWords.length) {
+    document.getElementById("reset-game").classList.remove("hidden");
+    showReflection();
+  }
 }
 
-function showFeedback(message) {
-  const feedback = document.createElement("div");
-  feedback.textContent = message;
-  feedback.className = "feedback";
-  document.body.appendChild(feedback);
-
-  setTimeout(() => {
-    feedback.remove();
-  }, 2000);
-}
-
-function startGame() {
-  const wordsToUse = italianWords.slice(0, selectedLevel);
-  createBoard([...wordsToUse, ...wordsToUse]);
-  matchedCards = [];
+function updateProgress(progress) {
+  const progressBar = document.getElementById("progress-bar");
+  progressBar.style.width = `${progress * 100}%`;
 }
 
 function shuffle(array) {
@@ -99,4 +84,15 @@ function shuffle(array) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
+  return array;
 }
+
+function showReflection() {
+  const reflection = document.getElementById("reflection");
+  const learnedWords = matchedCards.map(card => card.dataset.word);
+  const learnedList = document.getElementById("learned-words");
+  learnedList.innerHTML = learnedWords.map(word => `<li>${word}</li>`).join("");
+  reflection.classList.remove("hidden");
+}
+
+document.addEventListener("DOMContentLoaded", startGame);=
