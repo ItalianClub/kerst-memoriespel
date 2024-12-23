@@ -11,15 +11,15 @@
   <header>
     <img src="logo.png" alt="Logo" class="logo">
     <h1>🎄 Memory di Natale 🎅</h1>
-    <p>Trova le coppie tra le parole italiane e le vertalingen!</p>
+    <p>Trova le coppie tra le woorden en hun vertalingen!</p>
   </header>
 
   <!-- Moeilijkheidsselectie -->
   <div class="difficulty-select">
     <h2>Kies een niveau:</h2>
-    <button data-level="6">Makkelijk</button>
-    <button data-level="10">Gemiddeld</button>
-    <button data-level="15">Moeilijk</button>
+    <button data-level="makkelijk">Makkelijk</button>
+    <button data-level="gemiddeld">Gemiddeld</button>
+    <button data-level="moeilijk">Moeilijk</button>
   </div>
 
   <!-- Voortgangsbalk -->
@@ -39,7 +39,7 @@
     <h2>🎉 Gefeliciteerd! 🎉</h2>
     <p>Je hebt alle woorden gevonden. Hier zijn de woorden die je hebt geleerd:</p>
     <ul id="learned-words"></ul>
-    <button onclick="startGame(6)">Speel opnieuw</button>
+    <button onclick="startGame('makkelijk')">Speel opnieuw</button>
   </section>
 
   <!-- Footer -->
