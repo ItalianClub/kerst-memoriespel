@@ -7,33 +7,34 @@
 
 body {
   font-family: 'Montserrat', sans-serif;
-  background-color: #ebe5dc; /* Huisstijl zacht beige */
+  background: url('kerst-achtergrond.jpg') no-repeat center center fixed;
+  background-size: cover;
   color: #4d4d4d;
   text-align: center;
   margin: 0;
+  overflow-x: hidden;
 }
 
+/* Header */
 header {
-  background-color: #e6ded0; /* Licht beige */
+  background-color: rgba(230, 222, 208, 0.9);
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-bottom: 2px solid #9c1925;
 }
 
 .logo {
   width: 150px;
   margin-bottom: 10px;
+  border-radius: 50%;
+  background-color: #fff;
+  padding: 10px;
 }
 
 h1 {
-  font-family: 'Your-Italian-Script-Font', serif;
-  font-size: 2.5em;
-  color: #9c1925; /* Diep rood */
-}
-
-p {
-  font-size: 1.2em;
-  margin-bottom: 20px;
-  color: #4d4d4d;
+  font-size: 2.8em;
+  color: #9c1925;
+  text-shadow: 2px 2px #e6ded0;
 }
 
 #game-board {
@@ -42,7 +43,6 @@ p {
   grid-gap: 15px;
   justify-content: center;
   margin: 30px auto;
-  max-width: 90%;
 }
 
 .card {
@@ -52,7 +52,9 @@ p {
   cursor: pointer;
   transform-style: preserve-3d;
   transition: transform 0.6s ease;
-  border-radius: 10px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid #9c1925;
 }
 
 .card.flipped {
@@ -68,30 +70,80 @@ p {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.2em;
-  font-weight: bold;
-  border-radius: 10px;
+  border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .card .front {
-  background-color: #e6ded0; /* Licht beige */
-  background-image: url('kerst-icoon.png'); /* Kerst-icoon op de voorkant */
-  background-size: 50%;
+  background-color: #e6ded0;
+  background-image: url('kerstboom-icoon.png');
+  background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
 }
 
 .card .back {
-  background-color: #9c1925; /* Rood voor de achterkant */
+  background-color: #9c1925;
   color: #ffffff;
   transform: rotateY(180deg);
+  font-size: 1em;
+  font-weight: bold;
+  text-align: center;
 }
 
-footer {
-  background-color: #9c1925;
-  color: #e6ded0;
-  padding: 10px 0;
-  margin-top: 20px;
-  font-size: 1em;
+/* Progressiebalk */
+.progress-container {
+  width: 80%;
+  background-color: #e6ded0;
+  border-radius: 20px;
+  height: 20px;
+  margin: 20px auto;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #9c1925, #e6ded0);
+  transition: width 0.5s ease, background-color 0.5s ease;
+}
+
+.progress-text {
+  margin-top: 10px;
+  font-size: 1.2em;
+  color: #9c1925;
+  text-align: center;
+}
+
+/* Sneeuwanimatie */
+.snow-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.snowflake {
+  position: absolute;
+  top: -10px;
+  background-color: #ffffff;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  animation: fall 10s linear infinite, sway 3s ease-in-out infinite;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh);
+  }
+}
+
+@keyframes sway {
+  50% {
+    transform: translateX(20px);
+  }
 }
