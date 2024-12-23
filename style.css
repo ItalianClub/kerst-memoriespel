@@ -9,10 +9,9 @@ body {
   font-family: 'Montserrat', sans-serif;
   background-color: #ebe5dc;
   text-align: center;
-  position: relative;
-  overflow: hidden;
 }
 
+/* Header */
 header {
   background-color: rgba(230, 222, 208, 0.9);
   padding: 20px;
@@ -27,13 +26,14 @@ h1 {
   color: #9c1925;
 }
 
-/* Progressie */
+/* Progressiebalk */
 .progress-container {
   width: 80%;
   height: 20px;
   margin: 20px auto;
   background-color: #e6ded0;
   border-radius: 20px;
+  overflow: hidden;
 }
 
 .progress-bar {
@@ -43,6 +43,13 @@ h1 {
   transition: width 0.5s ease;
 }
 
+.progress-text {
+  margin-top: 10px;
+  font-size: 1.2em;
+  color: #9c1925;
+}
+
+/* Speelbord */
 #game-board {
   display: grid;
   grid-gap: 15px;
@@ -56,7 +63,7 @@ h1 {
   transform-style: preserve-3d;
   transition: transform 0.6s ease;
   cursor: pointer;
-  padding-bottom: 100%;
+  padding-bottom: 100%; /* 1:1 aspect ratio */
 }
 
 .card .front,
@@ -86,6 +93,25 @@ h1 {
 
 .card.flipped {
   transform: rotateY(180deg);
+}
+
+/* Reflectie */
+#reflection {
+  display: none;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.hidden {
+  display: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Sneeuw */
@@ -118,5 +144,14 @@ h1 {
 @keyframes sway {
   50% {
     transform: translateX(20px);
+  }
+}
+
+@media (max-width: 400px) {
+  #game-board {
+    grid-template-columns: repeat(2, 1fr); /* 2 kolommen */
+  }
+  .card {
+    padding-bottom: 70%; /* Grotere kaarten */
   }
 }
