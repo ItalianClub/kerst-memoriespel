@@ -66,7 +66,7 @@ function startGame(level) {
   timerInterval = setInterval(updateTimer, 1000);
 
   // Maak kaarten
-  cards.forEach(({ word, isTranslation }) => {
+  cards.forEach(({ value, isTranslation }) => {
     const card = document.createElement("div");
     card.classList.add("card");
 
@@ -77,28 +77,28 @@ function startGame(level) {
     // Achterkant (woord)
     const back = document.createElement("div");
     back.classList.add("back");
-    back.textContent = isTranslation ? word.translation : word.word;
+    back.textContent = value;
 
     card.append(front, back);
     gameBoard.appendChild(card);
 
     // Stel de waarde in voor vergelijking
-    card.dataset.value = isTranslation ? word.translation : word.word;
+    card.dataset.value = value;
+    card.dataset.isTranslation = isTranslation; // Voegt extra metadata toe
 
     // Eventlistener voor het omdraaien
     card.addEventListener("click", () => flipCard(card));
   });
 
   updateProgress(0); // Reset voortgangsbalk
-  initializeSnow(); // Voeg sneeuw toe
   document.getElementById("reset-game").classList.remove("hidden");
 }
 
 // Genereer kaarten
 function generateCards(words) {
   return words.flatMap(({ word, translation }) => [
-    { word: { word, translation }, isTranslation: false },
-    { word: { word, translation }, isTranslation: true }
+    { value: word, isTranslation: false },
+    { value: translation, isTranslation: true }
   ]);
 }
 
@@ -127,7 +127,10 @@ function flipCard(card) {
 function checkMatch() {
   const [card1, card2] = flippedCards;
 
-  if (card1.dataset.value === card2.dataset.value) {
+  if (
+    card1.dataset.value === card2.dataset.value &&
+    card1.dataset.isTranslation !== card2.dataset.isTranslation
+  ) {
     // Match gevonden
     matchedPairs++;
     flippedCards = [];
