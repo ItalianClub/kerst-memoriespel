@@ -10,6 +10,7 @@ body {
   background-color: #ebe5dc; /* Achtergrondkleur kerstthema */
   color: #4d4d4d;
   text-align: center;
+  overflow-x: hidden; /* Voorkomt horizontale scrollbalken */
 }
 
 /* Header */
@@ -31,6 +32,11 @@ h1 {
   text-shadow: 2px 2px #e6ded0;
 }
 
+p {
+  font-size: 1.2em;
+  margin: 10px 0;
+}
+
 /* Moeilijkheidsselectie */
 .difficulty-select {
   margin: 20px;
@@ -45,10 +51,16 @@ h1 {
   margin: 5px;
   cursor: pointer;
   font-size: 1.2em;
+  transition: background-color 0.3s ease;
 }
 
 .difficulty-select button:hover {
   background-color: #b71c2e;
+}
+
+.difficulty-select button.active {
+  background-color: #b71c2e;
+  font-weight: bold;
 }
 
 /* Timer */
@@ -66,6 +78,7 @@ h1 {
   background-color: #e6ded0;
   border-radius: 20px;
   overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .progress-bar {
@@ -98,6 +111,7 @@ h1 {
   aspect-ratio: 1 / 1; /* Vierkante kaarten */
   border-radius: 10px;
   overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .card .front,
@@ -124,6 +138,8 @@ h1 {
   justify-content: center;
   font-size: 1.2em;
   font-weight: bold;
+  text-align: center;
+  padding: 10px;
   transform: rotateY(180deg);
 }
 
@@ -187,13 +203,45 @@ h1 {
   }
 }
 
+/* Reset-knoppen */
+#reset-game,
+#reset-from-reflection {
+  background-color: #9c1925;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  margin: 20px auto;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#reset-game:hover,
+#reset-from-reflection:hover {
+  background-color: #b71c2e;
+}
+
 /* Responsiviteit */
-@media (max-width: 400px) {
+@media (max-width: 600px) {
   #game-board {
     grid-template-columns: repeat(2, 1fr); /* Twee kolommen voor mobiel */
   }
 
   .card {
     padding-bottom: 120%; /* Grotere kaarten op kleinere schermen */
+  }
+
+  #timer-display {
+    font-size: 1.2em;
+  }
+
+  #progress-text {
+    font-size: 1em;
+  }
+
+  #reset-game,
+  #reset-from-reflection {
+    font-size: 1em;
   }
 }
