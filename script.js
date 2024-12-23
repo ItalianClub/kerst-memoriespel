@@ -93,7 +93,7 @@ function shuffle(array) {
 }
 
 function flipCard(card) {
-  if (flippedCards.length < 2 && !card.classList.contains("flipped")) {
+  if (flippedCards.length < 2 && !card.classList.contains("flipped") && !card.classList.contains("matched")) {
     card.classList.add("flipped");
     flippedCards.push(card);
 
@@ -120,8 +120,10 @@ function checkMatch() {
       setTimeout(showReflection, 1000);
     }
   } else {
-    card1.classList.remove("flipped");
-    card2.classList.remove("flipped");
+    setTimeout(() => {
+      card1.classList.remove("flipped");
+      card2.classList.remove("flipped");
+    }, 800);
   }
 
   flippedCards = [];
@@ -129,8 +131,11 @@ function checkMatch() {
 
 function updateProgress(matchedPairs) {
   const progressBar = document.getElementById("progress-bar");
+  const progressText = document.getElementById("progress-text");
   const progress = (matchedPairs / totalPairs) * 100;
+
   progressBar.style.width = `${progress}%`;
+  progressText.textContent = `Je hebt ${matchedPairs} van de ${totalPairs} paren gevonden!`;
 }
 
 function updateTimer() {
