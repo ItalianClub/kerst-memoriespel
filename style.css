@@ -1,189 +1,208 @@
-const easyWords = [
-  { word: "Kerstboom", translation: "albero" },
-  { word: "Cadeau", translation: "regalo" },
-  { word: "Ster", translation: "stella" },
-  { word: "Sneeuw", translation: "neve" }
-];
+/* Algemene reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-const mediumWords = [
-  { word: "Engel", translation: "angelo" },
-  { word: "Feest", translation: "festa" },
-  { word: "Vreugde", translation: "gioia" },
-  { word: "Liefde", translation: "amore" }
-];
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: #ebe5dc;
+  color: #4d4d4d;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding-bottom: 20px;
+}
 
-const hardWords = [
-  { word: "Kerstman", translation: "Babbo Natale" },
-  { word: "Kerstbrood", translation: "panettone" },
-  { word: "Kerststal", translation: "presepe" },
-  { word: "Versieringen", translation: "addobbi" }
-];
+/* Header */
+header {
+  background-color: #e6ded0;
+  padding: 20px;
+  width: 100%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
-let flippedCards = [];
-let matchedPairs = 0;
-let totalPairs = 0;
-let timerInterval;
-let timeLeft = 120;
+header h1 {
+  font-size: 2.5em;
+  font-family: 'Great Vibes', cursive;
+  color: #9c1925;
+  margin-bottom: 10px;
+}
 
-function getWords(level) {
-  switch (level) {
-    case "makkelijk":
-      return easyWords;
-    case "gemiddeld":
-      return mediumWords;
-    case "moeilijk":
-      return hardWords;
-    default:
-      console.error("Onbekend niveau:", level);
-      return [];
+header p {
+  font-size: 1.2em;
+}
+
+/* Moeilijkheidsselectie */
+.difficulty-select {
+  margin: 20px;
+}
+
+.difficulty-select button {
+  background-color: #9c1925;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  margin: 5px;
+  cursor: pointer;
+  font-size: 1.2em;
+  transition: background-color 0.3s ease;
+}
+
+.difficulty-select button:hover {
+  background-color: #b71c2e;
+}
+
+.difficulty-select button.active {
+  background-color: #b71c2e;
+}
+
+/* Timer */
+#timer-display {
+  margin: 15px;
+  font-size: 1.5em;
+  color: #9c1925;
+  font-weight: bold;
+}
+
+/* Voortgangsbalk */
+.progress-container {
+  width: 80%;
+  height: 20px;
+  margin: 20px auto;
+  background-color: #e6ded0;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid #9c1925;
+}
+
+.progress-bar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #9c1925, #e63946);
+  transition: width 0.5s ease;
+}
+
+#progress-text {
+  margin-top: 10px;
+  font-size: 1.2em;
+  color: #9c1925;
+}
+
+/* Speelbord */
+#game-board {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 15px;
+  width: 90%;
+  max-width: 600px;
+  margin: 20px auto;
+  min-height: 400px; /* Zorg ervoor dat het bord altijd zichtbaar is */
+  background-color: #ffffff; /* Witte achtergrond voor contrast */
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Kaarten */
+.card {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease;
+  cursor: pointer;
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #f0f0f0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card .front,
+.card .back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.card .front {
+  background-color: #9c1925;
+  background-image: url('kerst-icoon.png'); /* Voeg een kersticoon toe */
+  background-size: cover;
+  background-position: center;
+}
+
+.card .back {
+  background-color: #ebe5dc;
+  color: #4d4d4d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2em;
+  text-align: center;
+  transform: rotateY(180deg);
+}
+
+.card.flipped .front {
+  transform: rotateY(180deg);
+}
+
+.card.flipped .back {
+  transform: rotateY(0deg);
+}
+
+.card.matched {
+  background-color: #4caf50;
+  color: white;
+  border: 2px solid #4caf50;
+  animation: pulse 0.5s ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 
-function startGame(level) {
-  clearInterval(timerInterval);
-  const words = getWords(level);
-  const cards = shuffle(generateCards(words));
-  const gameBoard = document.getElementById("game-board");
-  gameBoard.innerHTML = "";
-  flippedCards = [];
-  matchedPairs = 0;
-  totalPairs = words.length;
-  timeLeft = 120;
-
-  updateTimerDisplay();
-  timerInterval = setInterval(updateTimer, 1000);
-
-  cards.forEach(({ value, isTranslation }) => {
-    const card = document.createElement("div");
-    card.classList.add("card");
-
-    const front = document.createElement("div");
-    front.classList.add("front");
-
-    const back = document.createElement("div");
-    back.classList.add("back");
-    back.textContent = value;
-
-    card.append(front, back);
-    gameBoard.appendChild(card);
-
-    card.dataset.value = value;
-    card.dataset.isTranslation = isTranslation;
-
-    card.addEventListener("click", () => flipCard(card));
-  });
-
-  updateProgress(0);
-  document.getElementById("reset-game").classList.remove("hidden");
+/* Reflectiepagina */
+#reflection {
+  display: none;
+  margin: 20px;
+  animation: fadeIn 1s ease-in-out;
 }
 
-function generateCards(words) {
-  return words.flatMap(({ word, translation }) => [
-    { value: word, isTranslation: "false" },
-    { value: translation, isTranslation: "true" }
-  ]);
+.hidden {
+  display: none;
 }
 
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+@media (max-width: 600px) {
+  #game-board {
+    grid-template-columns: repeat(2, 1fr);
   }
-  return array;
-}
 
-function flipCard(card) {
-  if (flippedCards.length < 2 && !card.classList.contains("flipped") && !card.classList.contains("matched")) {
-    card.classList.add("flipped");
-    flippedCards.push(card);
-
-    if (flippedCards.length === 2) {
-      setTimeout(checkMatch, 800);
-    }
+  .card {
+    aspect-ratio: 1 / 1;
   }
 }
 
-function checkMatch() {
-  const [card1, card2] = flippedCards;
-
-  if (
-    card1.dataset.value === card2.dataset.value &&
-    card1.dataset.isTranslation !== card2.dataset.isTranslation
-  ) {
-    card1.classList.add("matched");
-    card2.classList.add("matched");
-    matchedPairs++;
-    updateProgress(matchedPairs);
-
-    if (matchedPairs === totalPairs) {
-      clearInterval(timerInterval);
-      setTimeout(showReflection, 1000);
-    }
-  } else {
-    card1.classList.remove("flipped");
-    card2.classList.remove("flipped");
-  }
-
-  flippedCards = [];
+footer {
+  margin-top: auto;
+  background-color: #e6ded0;
+  padding: 10px;
+  width: 100%;
+  text-align: center;
 }
-
-function updateProgress(matchedPairs) {
-  const progressBar = document.getElementById("progress-bar");
-  const progressText = document.getElementById("progress-text");
-  const progress = (matchedPairs / totalPairs) * 100;
-
-  progressBar.style.width = `${progress}%`;
-  progressText.textContent = `Je hebt ${matchedPairs} van de ${totalPairs} paren gevonden!`;
-}
-
-function updateTimer() {
-  timeLeft--;
-  updateTimerDisplay();
-
-  if (timeLeft <= 0) {
-    clearInterval(timerInterval);
-    alert("De tijd is op! Probeer het opnieuw.");
-    startGame("makkelijk");
-  }
-}
-
-function updateTimerDisplay() {
-  const timerDisplay = document.getElementById("timer-display");
-  timerDisplay.textContent = `Tijd: ${timeLeft} seconden`;
-}
-
-function showReflection() {
-  const reflection = document.getElementById("reflection");
-  const learnedList = document.getElementById("learned-words");
-  const cards = document.querySelectorAll(".card.matched");
-
-  learnedList.innerHTML = Array.from(cards)
-    .map(card => `<li>${card.dataset.value}</li>`)
-    .join("");
-  reflection.classList.remove("hidden");
-}
-
-document.getElementById("reset-game").addEventListener("click", () => {
-  const level = document.querySelector(".difficulty-select button.active")?.dataset.level || "makkelijk";
-  startGame(level);
-});
-
-document.getElementById("reset-from-reflection").addEventListener("click", () => {
-  startGame("makkelijk");
-  document.getElementById("reflection").classList.add("hidden");
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll(".difficulty-button").forEach(button => {
-    button.addEventListener("click", event => {
-      document
-        .querySelectorAll(".difficulty-button")
-        .forEach(btn => btn.classList.remove("active"));
-      event.target.classList.add("active");
-      const level = event.target.dataset.level;
-      startGame(level);
-    });
-  });
-
   startGame("makkelijk");
 });
