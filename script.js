@@ -99,10 +99,12 @@ function startGame(level) {
 
 // Genereer kaarten
 function generateCards(words) {
-  return words.flatMap(({ word, translation }) => [
+  const cards = words.flatMap(({ word, translation }) => [
     { value: word, isTranslation: "false" },
     { value: translation, isTranslation: "true" }
   ]);
+  console.log("Gegenereerde kaarten:", cards); // Debug-log
+  return cards;
 }
 
 // Schud kaarten
@@ -130,10 +132,13 @@ function flipCard(card) {
 function checkMatch() {
   const [card1, card2] = flippedCards;
 
+  console.log("Kaarten vergeleken:", card1.dataset, card2.dataset);
+
   if (
     card1.dataset.value === card2.dataset.value &&
     card1.dataset.isTranslation !== card2.dataset.isTranslation
   ) {
+    console.log("Match gevonden!");
     matchedPairs++;
     flippedCards = [];
     card1.removeEventListener("click", flipCard);
@@ -148,6 +153,7 @@ function checkMatch() {
       setTimeout(showReflection, 1000);
     }
   } else {
+    console.log("Geen match.");
     setTimeout(() => {
       card1.classList.remove("flipped");
       card2.classList.remove("flipped");
