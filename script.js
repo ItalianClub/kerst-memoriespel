@@ -22,80 +22,31 @@ const hardWords = [
   { word: "Versieringen", translation: "addobbi" }
 ];
 
-let flippedCards = [];
-let matchedPairs = 0;
-let totalPairs = 0;
-let timerInterval;
-let timeLeft;
+let selectedLevel = "makkelijk";
+let bingoBoard = [];
+let calledWords = [];
+let bingo = false;
 
-// Haal woorden op basis van moeilijkheidsgraad
+function startBingo(level) {
+  // Stel het niveau in en reset de game
+  selectedLevel = level;
+  bingoBoard = shuffle(getWords(level));
+  calledWords = [];
+  bingo = false;
+
+  // Maak een nieuwe bingo-kaart
+  generateBingoCard();
+  updateCalledWords();
+}
+
 function getWords(level) {
-  switch (level) {
-    case "makkelijk":
-      return easyWords;
-    case "gemiddeld":
-      return mediumWords;
-    case "moeilijk":
-      return hardWords;
-    default:
-      console.error("Onbekend niveau:", level);
-      return [];
-  }
+  if (level === "makkelijk") return easyWords;
+  if (level === "gemiddeld") return mediumWords;
+  if (level === "moeilijk") return hardWords;
+  console.error("Onbekend niveau:", level);
+  return [];
 }
 
-// Start het spel
-function startGame(level) {
-  clearInterval(timerInterval); // Reset de timer
-  const words = getWords(level);
-  const cards = shuffle(generateCards(words));
-  const gameBoard = document.getElementById("game-board");
-  gameBoard.innerHTML = ""; // Reset het speelbord
-  matchedPairs = 0;
-  flippedCards = [];
-  totalPairs = words.length;
-  timeLeft = 120; // Timer instellen
-
-  updateTimerDisplay();
-  timerInterval = setInterval(updateTimer, 1000);
-
-  // Kaarten genereren
-  cards.forEach(({ value, isTranslation }) => {
-    const card = document.createElement("div");
-    card.classList.add("card");
-
-    // Voorkant (leeg)
-    const front = document.createElement("div");
-    front.classList.add("front");
-
-    // Achterkant (met woord)
-    const back = document.createElement("div");
-    back.classList.add("back");
-    back.textContent = value;
-
-    card.append(front, back);
-    gameBoard.appendChild(card);
-
-    // Dataset instellen voor matching
-    card.dataset.value = value;
-    card.dataset.isTranslation = isTranslation;
-
-    // Klikbare functionaliteit toevoegen
-    card.addEventListener("click", () => flipCard(card));
-  });
-
-  updateProgress(0); // Voortgang resetten
-  document.getElementById("reset-game").classList.remove("hidden");
-}
-
-// Genereer kaarten
-function generateCards(words) {
-  return words.flatMap(({ word, translation }) => [
-    { value: word, isTranslation: "false" },
-    { value: translation, isTranslation: "true" }
-  ]);
-}
-
-// Schud kaarten
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -104,114 +55,78 @@ function shuffle(array) {
   return array;
 }
 
-// Kaart omdraaien
-function flipCard(card) {
-  if (flippedCards.length < 2 && !card.classList.contains("flipped")) {
-    card.classList.add("flipped");
-    flippedCards.push(card);
+function generateBingoCard() {
+  const bingoCardContainer = document.getElementById("bingo-card");
+  bingoCardContainer.innerHTML = "";
 
-    if (flippedCards.length === 2) {
-      setTimeout(checkMatch, 800);
-    }
-  }
+  bingoBoard.slice(0, 9).forEach((word, index) => {
+    const cardSlot = document.createElement("div");
+    cardSlot.classList.add("bingo-slot");
+    cardSlot.textContent = word.word;
+    cardSlot.dataset.translation = word.translation;
+    cardSlot.dataset.index = index;
+
+    cardSlot.addEventListener("click", () => markSlot(cardSlot));
+
+    bingoCardContainer.appendChild(cardSlot);
+  });
 }
 
-// Match controleren
-function checkMatch() {
-  const [card1, card2] = flippedCards;
+function callWord() {
+  if (bingo) return;
 
-  if (
-    card1.dataset.value === card2.dataset.value &&
-    card1.dataset.isTranslation !== card2.dataset.isTranslation
-  ) {
-    // Match gevonden
-    card1.classList.add("matched");
-    card2.classList.add("matched");
-    card1.removeEventListener("click", flipCard);
-    card2.removeEventListener("click", flipCard);
+  const remainingWords = bingoBoard.filter(word => !calledWords.includes(word.word));
+  if (remainingWords.length === 0) {
+    alert("Alle woorden zijn al geroepen!");
+    return;
+  }
 
-    matchedPairs++;
-    flippedCards = [];
+  const nextWord = remainingWords[Math.floor(Math.random() * remainingWords.length)];
+  calledWords.push(nextWord.word);
 
-    updateProgress(matchedPairs);
+  updateCalledWords();
 
-    if (matchedPairs === totalPairs) {
-      clearInterval(timerInterval);
-      setTimeout(showReflection, 1000);
-    }
+  document.getElementById("called-word").textContent = `Roept: ${nextWord.word}`;
+}
+
+function updateCalledWords() {
+  const calledWordsContainer = document.getElementById("called-words");
+  calledWordsContainer.innerHTML = calledWords.map(word => `<li>${word}</li>`).join("");
+}
+
+function markSlot(slot) {
+  if (bingo) return;
+
+  const word = slot.textContent;
+  if (calledWords.includes(word)) {
+    slot.classList.add("marked");
+    checkBingo();
   } else {
-    // Geen match
-    setTimeout(() => {
-      card1.classList.remove("flipped");
-      card2.classList.remove("flipped");
-      flippedCards = [];
-    }, 800);
+    alert("Dit woord is nog niet geroepen!");
   }
 }
 
-// Voortgang bijwerken
-function updateProgress(matchedPairs) {
-  const progressBar = document.getElementById("progress-bar");
-  const progressText = document.getElementById("progress-text");
-  const progress = (matchedPairs / totalPairs) * 100;
+function checkBingo() {
+  const slots = document.querySelectorAll(".bingo-slot");
+  const markedSlots = Array.from(slots).filter(slot => slot.classList.contains("marked"));
 
-  progressBar.style.width = `${progress}%`;
-  progressText.textContent = `Je hebt ${matchedPairs} van de ${totalPairs} paren gevonden!`;
-}
-
-// Timer bijwerken
-function updateTimer() {
-  timeLeft--;
-  updateTimerDisplay();
-
-  if (timeLeft <= 0) {
-    clearInterval(timerInterval);
-    alert("De tijd is op! Probeer het opnieuw.");
-    startGame("makkelijk");
+  if (markedSlots.length === 9) {
+    bingo = true;
+    alert("🎉 Bingo! Je hebt alle woorden gevonden!");
   }
 }
 
-function updateTimerDisplay() {
-  const timerDisplay = document.getElementById("timer-display");
-  timerDisplay.textContent = `Tijd: ${timeLeft} seconden`;
-}
-
-// Reflectiepagina tonen
-function showReflection() {
-  const reflection = document.getElementById("reflection");
-  const learnedList = document.getElementById("learned-words");
-  const cards = document.querySelectorAll(".card.matched");
-
-  learnedList.innerHTML = Array.from(cards)
-    .map(card => `<li>${card.dataset.value}</li>`)
-    .join("");
-  reflection.classList.remove("hidden");
-}
-
-// Reset-functionaliteit
-document.getElementById("reset-game").addEventListener("click", () => {
-  const level = document.querySelector(".difficulty-select button.active")?.dataset.level || "makkelijk";
-  startGame(level);
-});
-
-document.getElementById("reset-from-reflection").addEventListener("click", () => {
-  startGame("makkelijk");
-  document.getElementById("reflection").classList.add("hidden");
-});
-
-// Pagina laden
+// Start bij laden van de pagina
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".difficulty-button").forEach(button => {
     button.addEventListener("click", event => {
-      document
-        .querySelectorAll(".difficulty-button")
-        .forEach(btn => btn.classList.remove("active"));
-      event.target.classList.add("active");
       const level = event.target.dataset.level;
-      startGame(level);
+      startBingo(level);
     });
   });
 
+  document.getElementById("call-word").addEventListener("click", callWord);
+
   // Start standaard met makkelijk niveau
-  startGame("makkelijk");
+  startBingo("makkelijk");
 });
