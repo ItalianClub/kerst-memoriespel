@@ -17,13 +17,13 @@
   <!-- Moeilijkheidsselectie -->
   <div class="difficulty-select">
     <h2>Kies een niveau:</h2>
-    <button data-level="makkelijk">Makkelijk</button>
-    <button data-level="gemiddeld">Gemiddeld</button>
-    <button data-level="moeilijk">Moeilijk</button>
+    <button data-level="makkelijk" class="difficulty-button">Makkelijk</button>
+    <button data-level="gemiddeld" class="difficulty-button">Gemiddeld</button>
+    <button data-level="moeilijk" class="difficulty-button">Moeilijk</button>
   </div>
 
   <!-- Timer -->
-  <div id="timer-display">Tijd: 120 seconden</div>
+  <div id="timer-display" aria-live="polite">Tijd: 120 seconden</div>
 
   <!-- Voortgangsbalk -->
   <div class="progress-container">
@@ -53,6 +53,7 @@
   <!-- Sneeuwanimatie -->
   <div class="snow-container"></div>
 
+  <!-- Script -->
   <script src="script.js"></script>
 </body>
 </html>
