@@ -12,41 +12,43 @@ const italianWords = [
 ];
 
 let flippedCards = [];
-let matchedCards = [];
 let matchedPairs = 0;
+let difficultyLevel = 6;
+
+document.querySelectorAll('.difficulty-select button').forEach(button => {
+  button.addEventListener('click', () => {
+    difficultyLevel = parseInt(button.dataset.level);
+    startGame();
+  });
+});
 
 function startGame() {
-  const gameBoard = document.getElementById("game-board");
-  const resetButton = document.getElementById("reset-game");
-  resetButton.classList.add("hidden");
-  const cards = shuffle([...italianWords, ...italianWords]);
-  gameBoard.innerHTML = "";
-  matchedCards = [];
+  const board = document.getElementById('game-board');
+  board.innerHTML = '';
+  const cards = shuffle([...italianWords, ...italianWords].slice(0, difficultyLevel * 2));
   matchedPairs = 0;
 
   cards.forEach(({ word, translation }) => {
-    const card = document.createElement("div");
-    card.classList.add("card");
-    card.dataset.word = word;
+    const card = document.createElement('div');
+    card.classList.add('card');
+    card.dataset.name = word;
 
-    const front = document.createElement("div");
-    front.classList.add("front");
+    const front = document.createElement('div');
+    front.classList.add('front');
 
-    const back = document.createElement("div");
-    back.classList.add("back");
+    const back = document.createElement('div');
+    back.classList.add('back');
     back.innerHTML = `<p>${word}</p><small>${translation}</small>`;
 
     card.append(front, back);
-    card.addEventListener("click", () => flipCard(card));
-    gameBoard.appendChild(card);
+    card.addEventListener('click', () => flipCard(card));
+    board.appendChild(card);
   });
-
-  updateProgress(0);
 }
 
 function flipCard(card) {
-  if (flippedCards.length < 2 && !card.classList.contains("flipped")) {
-    card.classList.add("flipped");
+  if (flippedCards.length < 2 && !card.classList.contains('flipped')) {
+    card.classList.add('flipped');
     flippedCards.push(card);
 
     if (flippedCards.length === 2) {
@@ -58,25 +60,16 @@ function flipCard(card) {
 function checkMatch() {
   const [card1, card2] = flippedCards;
 
-  if (card1.dataset.word === card2.dataset.word) {
-    matchedCards.push(card1, card2);
+  if (card1.dataset.name === card2.dataset.name) {
     matchedPairs++;
-    updateProgress(matchedPairs / italianWords.length);
+    if (matchedPairs === difficultyLevel) {
+      alert("🎉 Je hebt gewonnen!");
+    }
   } else {
-    card1.classList.remove("flipped");
-    card2.classList.remove("flipped");
+    card1.classList.remove('flipped');
+    card2.classList.remove('flipped');
   }
-
   flippedCards = [];
-  if (matchedPairs === italianWords.length) {
-    document.getElementById("reset-game").classList.remove("hidden");
-    showReflection();
-  }
-}
-
-function updateProgress(progress) {
-  const progressBar = document.getElementById("progress-bar");
-  progressBar.style.width = `${progress * 100}%`;
 }
 
 function shuffle(array) {
@@ -87,12 +80,19 @@ function shuffle(array) {
   return array;
 }
 
-function showReflection() {
-  const reflection = document.getElementById("reflection");
-  const learnedWords = matchedCards.map(card => card.dataset.word);
-  const learnedList = document.getElementById("learned-words");
-  learnedList.innerHTML = learnedWords.map(word => `<li>${word}</li>`).join("");
-  reflection.classList.remove("hidden");
+function createSnow() {
+  const snowContainer = document.querySelector('.snow-container');
+  for (let i = 0; i < 100; i++) {
+    const snowflake = document.createElement('div');
+    snowflake.classList.add('snowflake');
+    snowflake.style.left = `${Math.random() * 100}vw`;
+    snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
+    snowflake.style.opacity = Math.random();
+    snowContainer.appendChild(snowflake);
+  }
 }
 
-document.addEventListener("DOMContentLoaded", startGame);=
+document.addEventListener('DOMContentLoaded', () => {
+  startGame();
+  createSnow();
+});
