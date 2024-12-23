@@ -43,7 +43,7 @@ let totalPairs = 0;
 let timerInterval;
 let timeLeft;
 
-// Functie om de woordenlijst op basis van niveau op te halen
+// Haal woorden op basis van moeilijkheidsgraad
 function getWords(level) {
   if (level === "makkelijk") return easyWords;
   if (level === "gemiddeld") return mediumWords;
@@ -52,26 +52,29 @@ function getWords(level) {
 
 // Start het spel
 function startGame(level) {
-  clearInterval(timerInterval); // Reset eventuele bestaande timers
+  clearInterval(timerInterval); // Reset eventuele bestaande timer
   const words = getWords(level);
   const cards = shuffle(generateCards(words));
   const gameBoard = document.getElementById("game-board");
-  gameBoard.innerHTML = "";
+  gameBoard.innerHTML = ""; // Reset bord
   matchedPairs = 0;
   flippedCards = [];
   totalPairs = words.length;
-  timeLeft = 120; // Stel tijdslimiet in (bijv. 2 minuten)
+  timeLeft = 120; // Stel tijdslimiet in
 
   updateTimerDisplay();
   timerInterval = setInterval(updateTimer, 1000);
 
+  // Maak kaarten
   cards.forEach(({ word, isTranslation }) => {
     const card = document.createElement("div");
     card.classList.add("card");
 
+    // Voorkant (afbeelding)
     const front = document.createElement("div");
     front.classList.add("front");
 
+    // Achterkant (woord)
     const back = document.createElement("div");
     back.classList.add("back");
     back.textContent = isTranslation ? word.translation : word.word;
@@ -79,15 +82,19 @@ function startGame(level) {
     card.append(front, back);
     gameBoard.appendChild(card);
 
-    card.addEventListener("click", () => flipCard(card, isTranslation ? word.translation : word.word));
+    // Stel de waarde in voor vergelijking
+    card.dataset.value = isTranslation ? word.translation : word.word;
+
+    // Eventlistener voor het omdraaien
+    card.addEventListener("click", () => flipCard(card));
   });
 
-  updateProgress(0);
-  initializeSnow();
+  updateProgress(0); // Reset voortgangsbalk
+  initializeSnow(); // Voeg sneeuw toe
   document.getElementById("reset-game").classList.remove("hidden");
 }
 
-// Genereer kaarten (Nederlands en Italiaans)
+// Genereer kaarten
 function generateCards(words) {
   return words.flatMap(({ word, translation }) => [
     { word: { word, translation }, isTranslation: false },
@@ -95,7 +102,7 @@ function generateCards(words) {
   ]);
 }
 
-// Kaarten schudden
+// Schud kaarten
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -105,10 +112,10 @@ function shuffle(array) {
 }
 
 // Kaart omdraaien
-function flipCard(card, value) {
+function flipCard(card) {
   if (flippedCards.length < 2 && !card.classList.contains("flipped")) {
     card.classList.add("flipped");
-    flippedCards.push({ card, value });
+    flippedCards.push(card);
 
     if (flippedCards.length === 2) {
       setTimeout(checkMatch, 800);
@@ -116,23 +123,32 @@ function flipCard(card, value) {
   }
 }
 
-// Match controleren
+// Verbeterde match controleren
 function checkMatch() {
   const [card1, card2] = flippedCards;
 
-  if (card1.value === card2.value) {
+  if (card1.dataset.value === card2.dataset.value) {
+    // Match gevonden
     matchedPairs++;
     flippedCards = [];
+    card1.removeEventListener("click", () => flipCard(card1));
+    card2.removeEventListener("click", () => flipCard(card2));
+
+    // Voortgang bijwerken
     updateProgress(matchedPairs);
 
+    // Controleer of het spel is voltooid
     if (matchedPairs === totalPairs) {
-      clearInterval(timerInterval); // Stop timer
+      clearInterval(timerInterval); // Stop de timer
       setTimeout(showReflection, 1000);
     }
   } else {
-    card1.card.classList.remove("flipped");
-    card2.card.classList.remove("flipped");
-    flippedCards = [];
+    // Geen match, draai kaarten terug
+    setTimeout(() => {
+      card1.classList.remove("flipped");
+      card2.classList.remove("flipped");
+      flippedCards = [];
+    }, 800);
   }
 }
 
@@ -154,7 +170,7 @@ function updateTimer() {
   if (timeLeft <= 0) {
     clearInterval(timerInterval);
     alert("De tijd is op! Probeer het opnieuw.");
-    startGame("makkelijk"); // Start opnieuw bij verlies
+    startGame("makkelijk");
   }
 }
 
@@ -171,28 +187,12 @@ function showReflection() {
 
   learnedList.innerHTML = Array.from(cards)
     .filter(card => card.classList.contains("flipped"))
-    .map(card => `<li>${card.querySelector(".back").textContent}</li>`)
+    .map(card => `<li>${card.dataset.value}</li>`)
     .join("");
   reflection.classList.remove("hidden");
 }
 
-// Sneeuwanimatie initialiseren
-function initializeSnow() {
-  const snowContainer = document.querySelector(".snow-container");
-  snowContainer.innerHTML = "";
-  for (let i = 0; i < 50; i++) {
-    const snowflake = document.createElement("div");
-    snowflake.classList.add("snowflake");
-    snowflake.style.left = `${Math.random() * 100}%`;
-    snowflake.style.animationDelay = `${Math.random() * 5}s`;
-    snowflake.style.animationDuration = `${5 + Math.random() * 5}s`;
-    snowflake.style.opacity = `${Math.random()}`;
-    snowflake.style.transform = `scale(${Math.random()})`;
-    snowContainer.appendChild(snowflake);
-  }
-}
-
-// Voeg de reset-functionaliteit toe
+// Voeg reset-functionaliteit toe
 document.getElementById("reset-game").addEventListener("click", () => {
   const level = document.querySelector(".difficulty-select button.active")?.dataset.level || "makkelijk";
   startGame(level);
@@ -203,15 +203,7 @@ document.getElementById("reset-from-reflection").addEventListener("click", () =>
   document.getElementById("reflection").classList.add("hidden");
 });
 
-// Eventlisteners voor moeilijkheidsselectie
-document.querySelectorAll(".difficulty-select button").forEach(button => {
-  button.addEventListener("click", () => {
-    const level = button.dataset.level;
-    startGame(level);
-  });
-});
-
-// Standaard starten met het makkelijke niveau
+// Start het spel bij het laden van de pagina
 document.addEventListener("DOMContentLoaded", () => {
   startGame("makkelijk");
 });
