@@ -1,11 +1,14 @@
-// Woordenlijsten per niveau
 const easyWords = [
   { word: "albero", translation: "Kerstboom" },
   { word: "regalo", translation: "Cadeau" },
   { word: "stella", translation: "Ster" },
   { word: "neve", translation: "Sneeuw" },
   { word: "candela", translation: "Kaars" },
-  { word: "angelo", translation: "Engel" }
+  { word: "angelo", translation: "Engel" },
+  { word: "festa", translation: "Feest" },
+  { word: "gioia", translation: "Vreugde" },
+  { word: "amicizia", translation: "Vriendschap" },
+  { word: "amore", translation: "Liefde" }
 ];
 
 const mediumWords = [
@@ -14,45 +17,51 @@ const mediumWords = [
   { word: "campana", translation: "Bel" },
   { word: "presepe", translation: "Kerststal" },
   { word: "addobbi", translation: "Versieringen" },
-  { word: "pupazzo di neve", translation: "Sneeuwpop" }
+  { word: "famiglia", translation: "Familie" },
+  { word: "neve artificiale", translation: "Kunstsneeuw" },
+  { word: "luminarie", translation: "Lichtjes" },
+  { word: "vigilia", translation: "Kerstavond" },
+  { word: "auguri", translation: "Wensen" }
 ];
 
 const hardWords = [
   { word: "cenone", translation: "Kerstmaal" },
-  { word: "vigilia di Natale", translation: "Kerstavond" },
-  { word: "auguri di Natale", translation: "Kerstwensen" },
-  { word: "festività", translation: "Feestdagen" },
+  { word: "zampone", translation: "Gevulde varkenspoot" },
   { word: "slitta", translation: "Slede" },
-  { word: "renna", translation: "Rendier" }
+  { word: "renna", translation: "Rendier" },
+  { word: "festività", translation: "Feestdagen" },
+  { word: "tradizione", translation: "Traditie" },
+  { word: "Natale", translation: "Kerstmis" },
+  { word: "dolce", translation: "Dessert" },
+  { word: "auguri di Natale", translation: "Kerstwensen" },
+  { word: "pupazzo di neve", translation: "Sneeuwpop" }
 ];
-
-// Selecteer de juiste woordenlijst op basis van het niveau
-function getWords(level) {
-  if (level <= 6) return easyWords;
-  if (level <= 10) return mediumWords;
-  return hardWords;
-}
 
 let flippedCards = [];
 let matchedPairs = 0;
+let totalPairs = 0;
 
+// Functie om de woordenlijst op basis van niveau op te halen
+function getWords(level) {
+  if (level === "makkelijk") return easyWords;
+  if (level === "gemiddeld") return mediumWords;
+  if (level === "moeilijk") return hardWords;
+}
+
+// Start het spel
 function startGame(level) {
-  const gameBoard = document.getElementById("game-board");
-  const resetButton = document.getElementById("reset-game");
-  resetButton.classList.add("hidden");
-  document.getElementById("reflection").classList.add("hidden");
-
-  // Stel de woordenlijst in op basis van het niveau
   const words = getWords(level);
-  const cards = shuffle([...words, ...words].slice(0, level));
-  gameBoard.innerHTML = "";
+  const cards = shuffle([...words, ...words]); // Dubbele set kaarten voor matching
+  const gameBoard = document.getElementById("game-board");
+  gameBoard.innerHTML = ""; // Leeg het bord
   matchedPairs = 0;
   flippedCards = [];
+  totalPairs = words.length;
 
+  // Genereer kaarten
   cards.forEach(({ word, translation }) => {
     const card = document.createElement("div");
     card.classList.add("card");
-    card.dataset.name = word;
 
     const front = document.createElement("div");
     front.classList.add("front");
@@ -62,13 +71,15 @@ function startGame(level) {
     back.innerHTML = `<p>${word}</p><small>${translation}</small>`;
 
     card.append(front, back);
-    card.addEventListener("click", () => flipCard(card));
     gameBoard.appendChild(card);
+
+    card.addEventListener("click", () => flipCard(card));
   });
 
-  updateProgress(0, level / 2);
+  updateProgress(0);
 }
 
+// Kaart omdraaien
 function flipCard(card) {
   if (flippedCards.length < 2 && !card.classList.contains("flipped")) {
     card.classList.add("flipped");
@@ -80,15 +91,16 @@ function flipCard(card) {
   }
 }
 
+// Check of twee kaarten een match zijn
 function checkMatch() {
   const [card1, card2] = flippedCards;
 
-  if (card1.dataset.name === card2.dataset.name) {
+  if (card1.querySelector(".back").innerHTML === card2.querySelector(".back").innerHTML) {
     matchedPairs++;
     flippedCards = [];
-    updateProgress(matchedPairs, easyWords.length);
+    updateProgress(matchedPairs);
 
-    if (matchedPairs === easyWords.length) {
+    if (matchedPairs === totalPairs) {
       setTimeout(() => showReflection(), 1000);
     }
   } else {
@@ -98,7 +110,8 @@ function checkMatch() {
   }
 }
 
-function updateProgress(matchedPairs, totalPairs) {
+// Voortgang bijwerken
+function updateProgress(matchedPairs) {
   const progressBar = document.getElementById("progress-bar");
   const progressText = document.getElementById("progress-text");
   const progress = (matchedPairs / totalPairs) * 100;
@@ -107,6 +120,20 @@ function updateProgress(matchedPairs, totalPairs) {
   progressText.textContent = `Je hebt ${matchedPairs} van de ${totalPairs} paren gevonden!`;
 }
 
+// Reflectiepagina tonen
+function showReflection() {
+  const reflection = document.getElementById("reflection");
+  const learnedList = document.getElementById("learned-words");
+  const cards = document.querySelectorAll(".card");
+
+  learnedList.innerHTML = Array.from(cards)
+    .filter(card => card.classList.contains("flipped"))
+    .map(card => `<li>${card.querySelector(".back").innerHTML}</li>`)
+    .join("");
+  reflection.classList.remove("hidden");
+}
+
+// Schud de kaarten
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -115,22 +142,15 @@ function shuffle(array) {
   return array;
 }
 
-function showReflection() {
-  const reflection = document.getElementById("reflection");
-  const learnedList = document.getElementById("learned-words");
-  learnedList.innerHTML = matchedPairs
-    .map(card => `<li>${card.dataset.name}</li>`)
-    .join("");
-  reflection.classList.remove("hidden");
-}
-
+// Eventlisteners voor moeilijkheidsselectie
 document.querySelectorAll(".difficulty-select button").forEach(button => {
   button.addEventListener("click", () => {
-    const level = parseInt(button.dataset.level);
+    const level = button.dataset.level;
     startGame(level);
   });
 });
 
+// Start standaard met het makkelijke niveau
 document.addEventListener("DOMContentLoaded", () => {
-  startGame(6);
+  startGame("makkelijk");
 });
