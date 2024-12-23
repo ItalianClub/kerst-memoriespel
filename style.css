@@ -136,8 +136,8 @@ p {
 }
 
 .card .back {
-  background-color: #9c1925;
-  color: white;
+  background-color: #ebe5dc;
+  color: #4d4d4d;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -207,4 +207,30 @@ p {
     transform: translateY(100vh) rotate(360deg);
     opacity: 0;
   }
+}
+
+/* Responsiviteit */
+@media (max-width: 600px) {
+  #game-board {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .card {
+    padding-bottom: 100%; /* Zorgt voor vierkante kaarten */
+  }
+}
+
+/* Footer */
+footer {
+  margin-top: auto;
+  background-color: #e6ded0;
+  padding: 10px 20px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+}
+
+footer p {
+  font-size: 1em;
+  color: #4d4d4d;
 }
