@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Header met logo en titel -->
+  <!-- Header -->
   <header>
     <img src="logo.png" alt="Italian Club Logo" class="logo">
     <h1>🎄 Memory di Natale 🎅</h1>
@@ -20,33 +20,18 @@
   </div>
   <p class="progress-text" id="progress-text">Begin met spelen om je voortgang te zien!</p>
 
-  <!-- Moeilijkheidsselectie -->
-  <section class="difficulty-select">
-    <h2>Kies een niveau:</h2>
-    <button class="difficulty" data-level="6">Makkelijk</button>
-    <button class="difficulty" data-level="10">Gemiddeld</button>
-    <button class="difficulty" data-level="15">Moeilijk</button>
-  </section>
-
-  <!-- Sneeuwanimatie -->
-  <div class="snow-container"></div>
-
   <!-- Speelbord -->
   <main>
     <div id="game-board"></div>
+    <button id="reset-game" class="hidden">Opnieuw spelen</button>
   </main>
 
-  <!-- Feedback sectie -->
-  <section id="feedback" class="hidden">
-    <p id="feedback-text"></p>
-  </section>
-
-  <!-- Reflectie en resultaat -->
+  <!-- Reflectie -->
   <section id="reflection" class="hidden">
     <h2>🎉 Gefeliciteerd! 🎉</h2>
     <p>Je hebt alle woorden gevonden. Hier zijn de woorden die je hebt geleerd:</p>
     <ul id="learned-words"></ul>
-    <button onclick="resetGame()">Speel opnieuw</button>
+    <button onclick="startGame()">Speel opnieuw</button>
   </section>
 
   <!-- Footer -->
