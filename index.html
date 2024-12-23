@@ -1,143 +1,55 @@
-/* Algemene reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory di Natale</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <img src="logo.png" alt="Logo" class="logo">
+    <h1>🎄 Memory di Natale 🎅</h1>
+    <p>Zoek de juiste Italiaanse vertaling bij het Nederlandse woord!</p>
+  </header>
 
-body {
-  font-family: 'Nunito', sans-serif;
-  background-color: #ebe5dc;
-  color: #4d4d4d;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  padding: 20px;
-}
+  <!-- Moeilijkheidsselectie -->
+  <div class="difficulty-select">
+    <h2>Kies een niveau:</h2>
+    <button data-level="makkelijk" class="difficulty-button">Makkelijk</button>
+    <button data-level="gemiddeld" class="difficulty-button">Gemiddeld</button>
+    <button data-level="moeilijk" class="difficulty-button">Moeilijk</button>
+  </div>
 
-header {
-  background-color: #e6ded0;
-  padding: 20px;
-  width: 100%;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+  <!-- Timer -->
+  <div id="timer-display" aria-live="polite">Tijd: 120 seconden</div>
 
-header h1 {
-  font-size: 2.5em;
-  color: #9c1925;
-  font-family: 'Great Vibes', cursive;
-  margin-bottom: 10px;
-}
+  <!-- Voortgangsbalk -->
+  <div class="progress-container">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+  <p id="progress-text">Begin met spelen om je voortgang te zien!</p>
 
-header p {
-  font-size: 1.2em;
-}
+  <!-- Speelbord -->
+  <main>
+    <div id="game-board" class="game-board"></div>
+    <button id="reset-game" class="hidden">Speel opnieuw</button>
+  </main>
 
-.difficulty-select {
-  margin: 20px 0;
-}
+  <!-- Reflectiepagina -->
+  <section id="reflection" class="hidden">
+    <h2>🎉 Gefeliciteerd! 🎉</h2>
+    <p>Je hebt alle woorden gevonden. Hier zijn de woorden die je hebt geleerd:</p>
+    <ul id="learned-words"></ul>
+    <button id="reset-from-reflection">Speel opnieuw</button>
+  </section>
 
-.difficulty-select h2 {
-  font-size: 1.5em;
-  margin-bottom: 10px;
-}
+  <!-- Footer -->
+  <footer>
+    <p>Buon divertimento met <strong>Memory di Natale</strong>!</p>
+  </footer>
 
-.difficulty-select button {
-  background-color: #9c1925;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  margin: 5px;
-  cursor: pointer;
-  font-size: 1.2em;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.difficulty-select button:hover {
-  background-color: #b71c2e;
-  transform: scale(1.1);
-}
-
-main {
-  flex: 1;
-  width: 100%;
-}
-
-#bingo-game {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-#bingo-card {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  width: 100%;
-  max-width: 300px;
-  margin-bottom: 20px;
-}
-
-.bingo-slot {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #f0f0f0;
-  border: 2px solid #ccc;
-  height: 100px;
-  font-size: 1.2em;
-  text-align: center;
-  cursor: pointer;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-.bingo-slot:hover {
-  background-color: #e6ded0;
-}
-
-.bingo-slot.marked {
-  background-color: #4caf50;
-  color: white;
-  border-color: #4caf50;
-}
-
-button#call-word {
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-size: 1.2em;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-button#call-word:hover {
-  background-color: #45a049;
-  transform: scale(1.1);
-}
-
-#called-word {
-  font-size: 1.5em;
-  margin: 10px 0;
-  color: #9c1925;
-}
-
-#called-words {
-  list-style-type: none;
-  margin-top: 10px;
-}
-
-#called-words li {
-  font-size: 1em;
-  color: #4d4d4d;
-}
-
-footer {
-  margin-top: auto;
-  background-color: #e
+  <script src="script.js"></script>
+</body>
+</html>
