@@ -100,7 +100,11 @@ h1 {
   position: relative;
   aspect-ratio: 1;
   overflow: hidden;
-  transition: transform 0.6s ease;
+  transition: transform 0.6s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
 }
 
 .card.flipped .front {
