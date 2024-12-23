@@ -60,6 +60,11 @@ p {
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+.difficulty-select button.active {
+  background-color: #b71c2e;
+  transform: scale(1.1);
+}
+
 .difficulty-select button:hover {
   background-color: #b71c2e;
   transform: scale(1.1);
@@ -106,6 +111,7 @@ p {
   margin: 20px auto;
 }
 
+/* Kaarten */
 .card {
   position: relative;
   transform-style: preserve-3d;
@@ -163,6 +169,8 @@ p {
 #reflection {
   display: none;
   animation: fadeIn 1s ease-in-out;
+  padding: 20px;
+  text-align: center;
 }
 
 .hidden {
@@ -174,9 +182,49 @@ p {
   to { opacity: 1; }
 }
 
+/* Footer */
+footer {
+  margin-top: auto;
+  background-color: #e6ded0;
+  padding: 10px 20px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+}
+
+footer p {
+  font-size: 1em;
+  color: #4d4d4d;
+}
+
+/* Sneeuwvlokken (optioneel) */
+.snowflake {
+  position: absolute;
+  top: -50px;
+  color: white;
+  font-size: 1em;
+  opacity: 0.8;
+  animation: snow 10s linear infinite;
+}
+
+@keyframes snow {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
 /* Responsiviteit */
 @media (max-width: 600px) {
   #game-board {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .card {
+    padding-bottom: 100%;
   }
 }
