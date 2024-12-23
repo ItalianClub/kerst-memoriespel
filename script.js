@@ -52,12 +52,13 @@ function getWords(level) {
 // Start het spel
 function startGame(level) {
   const words = getWords(level);
-  const cards = shuffle([...words, ...words]); // Dubbele set kaarten voor matching
+  const pairs = generatePairs(words); // Genereer unieke kaartparen
+  const cards = shuffle([...pairs, ...pairs]); // Dubbele set kaarten voor matching
   const gameBoard = document.getElementById("game-board");
   gameBoard.innerHTML = ""; // Leeg het bord
   matchedPairs = 0;
   flippedCards = [];
-  totalPairs = words.length;
+  totalPairs = pairs.length;
 
   // Genereer kaarten
   cards.forEach(({ word, translation }) => {
@@ -69,22 +70,31 @@ function startGame(level) {
 
     const back = document.createElement("div");
     back.classList.add("back");
-    back.textContent = word; // Nederlands of Italiaans woord
+    back.textContent = word; // Nederlandse of Italiaanse tekst
 
     card.append(front, back);
     gameBoard.appendChild(card);
 
-    card.addEventListener("click", () => flipCard(card));
+    card.addEventListener("click", () => flipCard(card, word, translation));
   });
 
   updateProgress(0);
+  initializeSnow(); // Start sneeuwanimatie
+}
+
+// Kaarten genereren voor uniek paar
+function generatePairs(words) {
+  return words.map(pair => ({
+    word: pair.word,
+    translation: pair.translation
+  }));
 }
 
 // Kaart omdraaien
-function flipCard(card) {
+function flipCard(card, word, translation) {
   if (flippedCards.length < 2 && !card.classList.contains("flipped")) {
     card.classList.add("flipped");
-    flippedCards.push(card);
+    flippedCards.push({ card, word, translation });
 
     if (flippedCards.length === 2) {
       setTimeout(checkMatch, 800);
@@ -94,12 +104,9 @@ function flipCard(card) {
 
 // Check of twee kaarten een match zijn
 function checkMatch() {
-  const [card1, card2] = flippedCards;
+  const [firstCard, secondCard] = flippedCards;
 
-  if (
-    card1.querySelector(".back").textContent ===
-    card2.querySelector(".back").textContent
-  ) {
+  if (firstCard.translation === secondCard.word || firstCard.word === secondCard.translation) {
     matchedPairs++;
     flippedCards = [];
     updateProgress(matchedPairs);
@@ -108,8 +115,8 @@ function checkMatch() {
       setTimeout(() => showReflection(), 1000);
     }
   } else {
-    card1.classList.remove("flipped");
-    card2.classList.remove("flipped");
+    firstCard.card.classList.remove("flipped");
+    secondCard.card.classList.remove("flipped");
     flippedCards = [];
   }
 }
@@ -144,6 +151,22 @@ function shuffle(array) {
     [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
+}
+
+// Sneeuwanimatie initialiseren
+function initializeSnow() {
+  const snowContainer = document.querySelector(".snow-container");
+  snowContainer.innerHTML = ""; // Reset sneeuw
+  for (let i = 0; i < 50; i++) {
+    const snowflake = document.createElement("div");
+    snowflake.classList.add("snowflake");
+    snowflake.style.left = `${Math.random() * 100}%`;
+    snowflake.style.animationDelay = `${Math.random() * 5}s`;
+    snowflake.style.animationDuration = `${5 + Math.random() * 5}s`;
+    snowflake.style.opacity = `${Math.random()}`;
+    snowflake.style.transform = `scale(${Math.random()})`;
+    snowContainer.appendChild(snowflake);
+  }
 }
 
 // Eventlisteners voor moeilijkheidsselectie
