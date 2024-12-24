@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("Spel geladen. Start niveau: makkelijk");
   startGame("makkelijk");
   setupDifficultyButtons();
   createSnowflakes();
@@ -51,6 +52,8 @@ let totalPairs = 0;
 // Start het spel
 function startGame(level) {
   const words = getWords(level);
+  console.log("Woordenlijst geladen voor niveau:", level, words);
+
   totalPairs = words.length;
   matchedPairs = 0;
   flippedCards = [];
@@ -63,7 +66,7 @@ function getWords(level) {
   if (level === "makkelijk") return easyWords;
   if (level === "gemiddeld") return mediumWords;
   if (level === "moeilijk") return hardWords;
-  return easyWords; // Standaard naar makkelijk
+  return easyWords;
 }
 
 // Moeilijkheidsknoppen instellen
@@ -72,6 +75,7 @@ function setupDifficultyButtons() {
   buttons.forEach(button => {
     button.addEventListener("click", () => {
       const level = button.dataset.level;
+      console.log("Niveau geselecteerd:", level);
       startGame(level);
     });
   });
@@ -106,9 +110,11 @@ function generateCards(words) {
     card.addEventListener("click", () => flipCard(card));
     gameBoard.appendChild(card);
   });
+
+  console.log("Aantal kaarten gegenereerd:", document.querySelectorAll(".card").length);
 }
 
-// Kaarten schudden
+// Schud kaarten
 function shuffle(cards) {
   for (let i = cards.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -132,13 +138,12 @@ function flipCard(card) {
 // Controleer match
 function checkMatch() {
   const [card1, card2] = flippedCards;
+  console.log("Controleer match tussen:", card1.dataset.value, card2.dataset.value);
 
   if (card1.dataset.value === card2.dataset.value) {
     matchedPairs++;
     card1.classList.add("matched");
     card2.classList.add("matched");
-    card1.removeEventListener("click", () => flipCard(card1));
-    card2.removeEventListener("click", () => flipCard(card2));
     flippedCards = [];
     updateProgress();
 
