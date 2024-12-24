@@ -17,12 +17,14 @@
   </header>
 
   <!-- Moeilijkheidsselectie -->
-  <div class="difficulty-select">
+  <section class="difficulty-select">
     <h2>Kies een niveau:</h2>
-    <button data-level="makkelijk" class="level-button">Makkelijk</button>
-    <button data-level="gemiddeld" class="level-button">Gemiddeld</button>
-    <button data-level="moeilijk" class="level-button">Moeilijk</button>
-  </div>
+    <div class="button-container">
+      <button data-level="makkelijk" class="level-button">Makkelijk</button>
+      <button data-level="gemiddeld" class="level-button">Gemiddeld</button>
+      <button data-level="moeilijk" class="level-button">Moeilijk</button>
+    </div>
+  </section>
 
   <!-- Speelbord -->
   <main>
@@ -30,19 +32,29 @@
   </main>
 
   <!-- Voortgang -->
-  <div class="progress-container">
-    <div id="progress-bar"></div>
-  </div>
-  <p id="progress-text">Begin met spelen om je voortgang te zien!</p>
+  <section class="progress-section">
+    <div class="progress-container">
+      <div id="progress-bar"></div>
+    </div>
+    <p id="progress-text">Begin met spelen om je voortgang te zien!</p>
+  </section>
 
   <!-- Sneeuwanimatie -->
   <div class="snow-container"></div>
+
+  <!-- Reflectiepagina (einde van het spel) -->
+  <section id="reflection" class="hidden">
+    <h2>Gefeliciteerd! 🎉</h2>
+    <p>Je hebt alle paren gevonden!</p>
+    <button id="reset-from-reflection" class="level-button">Speel opnieuw</button>
+  </section>
 
   <!-- Footer -->
   <footer>
     <p>Veel plezier met <strong>Memory di Natale</strong>! Buone Feste! 🎄</p>
   </footer>
 
+  <!-- JavaScript-bestand -->
   <script src="script.js"></script>
 </body>
 </html>
