@@ -19,9 +19,15 @@ header {
   text-align: center;
 }
 
+.logo-container {
+  background: white;
+  border-radius: 10px;
+  display: inline-block;
+  padding: 10px;
+}
+
 .logo {
   width: 150px;
-  margin-bottom: 10px;
 }
 
 h1 {
@@ -103,13 +109,10 @@ p {
   transform: rotateY(0deg);
 }
 
-/* Stijl voor gematchte kaarten */
 .card.matched {
-  pointer-events: none; /* Niet meer klikbaar */
-  background-color: #28a745; /* Groen bij match */
-  color: #ffffff;
-  font-weight: bold;
-  transform: scale(1.05); /* Kleinere vergroting voor effect */
+  pointer-events: none;
+  background-color: #28a745;
+  transform: scale(1.05);
   transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
@@ -169,7 +172,6 @@ p {
   }
 }
 
-/* Responsiviteit */
 @media (max-width: 600px) {
   #game-board {
     grid-template-columns: repeat(2, 1fr);
@@ -183,5 +185,4 @@ p {
   h1 {
     font-size: 1.8em;
   }
-}
 }
