@@ -16,7 +16,6 @@ body {
 header {
   background: #e6ded0;
   padding: 20px;
-  text-align: center;
 }
 
 .logo-container {
@@ -101,6 +100,7 @@ p {
   font-weight: bold;
 }
 
+/* Flip-effect voor de kaarten */
 .card.flipped .front {
   transform: rotateY(180deg);
 }
@@ -109,11 +109,30 @@ p {
   transform: rotateY(0deg);
 }
 
+/* Stijl voor gematchte kaarten */
 .card.matched {
-  pointer-events: none;
-  background-color: #28a745;
-  transform: scale(1.05);
+  pointer-events: none; /* Niet meer klikbaar */
+  background-color: #28a745; /* Groen bij match */
+  transform: scale(1.05); /* Iets groter maken bij match */
   transition: transform 0.3s ease, background-color 0.3s ease;
+  color: white;
+}
+
+/* Stijl voor foutieve kaarten (optioneel) */
+.card.error {
+  animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
 }
 
 /* Voortgangsbalk */
