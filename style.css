@@ -74,6 +74,7 @@ p {
   cursor: pointer;
   border-radius: 10px;
   overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .card .front {
@@ -102,11 +103,14 @@ p {
   transform: rotateY(0deg);
 }
 
+/* Stijl voor gematchte kaarten */
 .card.matched {
-  background-color: #28a745;
+  pointer-events: none; /* Niet meer klikbaar */
+  background-color: #28a745; /* Groen bij match */
   color: #ffffff;
   font-weight: bold;
-  pointer-events: none;
+  transform: scale(1.05); /* Kleinere vergroting voor effect */
+  transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 /* Voortgangsbalk */
@@ -179,4 +183,5 @@ p {
   h1 {
     font-size: 1.8em;
   }
+}
 }
