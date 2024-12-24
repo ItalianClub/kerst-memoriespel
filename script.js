@@ -58,7 +58,15 @@ function startGame(level) {
   generateCards(words);
 }
 
-// Koppel moeilijkheidsknoppen
+// Woordenlijst ophalen
+function getWords(level) {
+  if (level === "makkelijk") return easyWords;
+  if (level === "gemiddeld") return mediumWords;
+  if (level === "moeilijk") return hardWords;
+  return easyWords; // Standaard naar makkelijk
+}
+
+// Moeilijkheidsknoppen instellen
 function setupDifficultyButtons() {
   const buttons = document.querySelectorAll(".level-button");
   buttons.forEach(button => {
@@ -69,15 +77,7 @@ function setupDifficultyButtons() {
   });
 }
 
-// Haal woordenlijst op
-function getWords(level) {
-  if (level === "makkelijk") return easyWords;
-  if (level === "gemiddeld") return mediumWords;
-  if (level === "moeilijk") return hardWords;
-  return easyWords; // Standaard naar makkelijk
-}
-
-// Genereer kaarten
+// Kaarten genereren
 function generateCards(words) {
   const gameBoard = document.getElementById("game-board");
   gameBoard.innerHTML = "";
@@ -108,7 +108,7 @@ function generateCards(words) {
   });
 }
 
-// Schud kaarten
+// Kaarten schudden
 function shuffle(cards) {
   for (let i = cards.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -129,7 +129,7 @@ function flipCard(card) {
   }
 }
 
-// Controleer of er een match is
+// Controleer match
 function checkMatch() {
   const [card1, card2] = flippedCards;
 
@@ -142,7 +142,6 @@ function checkMatch() {
     flippedCards = [];
     updateProgress();
 
-    // Controleer of alle matches zijn gevonden
     if (matchedPairs === totalPairs) {
       setTimeout(() => {
         alert("Gefeliciteerd! Je hebt alle kaarten gematcht!");
@@ -157,7 +156,7 @@ function checkMatch() {
   }
 }
 
-// Update voortgang
+// Voortgangsbalk bijwerken
 function updateProgress() {
   const progressBar = document.getElementById("progress-bar");
   const progressText = document.getElementById("progress-text");
