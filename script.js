@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("Spel geladen.");
+  console.log("Spel gestart.");
   startGame("makkelijk");
   setupDifficultyButtons();
   createSnowflakes();
@@ -153,7 +153,7 @@ function checkMatch() {
     updateProgress();
 
     if (matchedPairs === totalPairs) {
-      setTimeout(() => alert("Gefeliciteerd! Je hebt alle kaarten gematcht!"), 500);
+      setTimeout(() => showReflection(), 500);
     }
   } else {
     console.log("Geen match. Draai kaarten terug.");
@@ -175,6 +175,11 @@ function updateProgress() {
   const progress = (matchedPairs / totalPairs) * 100;
   progressBar.style.width = `${progress}%`;
   progressText.textContent = `Je hebt ${matchedPairs} van de ${totalPairs} paren gevonden!`;
+}
+
+// Toon reflectiepagina
+function showReflection() {
+  document.getElementById("reflection").classList.remove("hidden");
 }
 
 // Voeg sneeuw toe
