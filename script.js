@@ -48,7 +48,7 @@ const hardWords = [
 let flippedCards = [];
 let matchedPairs = 0;
 let totalPairs = 0;
-let lockBoard = false;
+let lockBoard = false; // Voorkomt dubbele acties tijdens checks
 
 // Start het spel
 function startGame(level) {
@@ -59,14 +59,15 @@ function startGame(level) {
   lockBoard = false;
   updateProgress();
   generateCards(words);
+  console.log(`Spel gestart op niveau: ${level}`);
 }
 
-// Haal woordenlijst op
+// Haal de juiste woordenlijst op
 function getWords(level) {
   if (level === "makkelijk") return easyWords;
   if (level === "gemiddeld") return mediumWords;
   if (level === "moeilijk") return hardWords;
-  return easyWords;
+  return easyWords; // Standaard naar makkelijk
 }
 
 // Stel moeilijkheidsknoppen in
@@ -75,7 +76,6 @@ function setupDifficultyButtons() {
   buttons.forEach(button => {
     button.addEventListener("click", () => {
       const level = button.dataset.level;
-      console.log(`Niveau geselecteerd: ${level}`);
       startGame(level);
     });
   });
@@ -140,9 +140,14 @@ function flipCard(card) {
 function checkMatch() {
   const [card1, card2] = flippedCards;
 
+  console.log("Controleer match:", card1.dataset.value, card2.dataset.value);
+
   if (card1.dataset.value === card2.dataset.value) {
+    console.log("Match gevonden!");
     card1.classList.add("matched");
     card2.classList.add("matched");
+    card1.removeEventListener("click", () => flipCard(card1));
+    card2.removeEventListener("click", () => flipCard(card2));
     matchedPairs++;
     flippedCards = [];
     updateProgress();
@@ -151,6 +156,7 @@ function checkMatch() {
       setTimeout(() => alert("Gefeliciteerd! Je hebt alle kaarten gematcht!"), 500);
     }
   } else {
+    console.log("Geen match. Draai kaarten terug.");
     setTimeout(() => {
       card1.classList.remove("flipped");
       card2.classList.remove("flipped");
@@ -161,7 +167,7 @@ function checkMatch() {
   lockBoard = false;
 }
 
-// Update voortgang
+// Update de voortgang
 function updateProgress() {
   const progressBar = document.getElementById("progress-bar");
   const progressText = document.getElementById("progress-text");
