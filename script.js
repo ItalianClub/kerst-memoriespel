@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   startGame("makkelijk");
+  setupDifficultyButtons();
   createSnowflakes();
 });
 
@@ -55,6 +56,17 @@ function startGame(level) {
   flippedCards = [];
   updateProgress();
   generateCards(words);
+}
+
+// Koppel moeilijkheidsknoppen
+function setupDifficultyButtons() {
+  const buttons = document.querySelectorAll(".level-button");
+  buttons.forEach(button => {
+    button.addEventListener("click", () => {
+      const level = button.dataset.level;
+      startGame(level);
+    });
+  });
 }
 
 // Haal woordenlijst op
@@ -122,7 +134,6 @@ function checkMatch() {
   const [card1, card2] = flippedCards;
 
   if (card1.dataset.value === card2.dataset.value) {
-    // Match gevonden
     matchedPairs++;
     card1.classList.add("matched");
     card2.classList.add("matched");
@@ -138,7 +149,6 @@ function checkMatch() {
       }, 500);
     }
   } else {
-    // Geen match, draai kaarten terug
     setTimeout(() => {
       card1.classList.remove("flipped");
       card2.classList.remove("flipped");
