@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("Spel geladen.");
   startGame("makkelijk");
   setupDifficultyButtons();
   createSnowflakes();
@@ -47,7 +48,7 @@ const hardWords = [
 let flippedCards = [];
 let matchedPairs = 0;
 let totalPairs = 0;
-let lockBoard = false; // Voorkomt klikken tijdens het controleren van matches
+let lockBoard = false;
 
 // Start het spel
 function startGame(level) {
@@ -60,7 +61,7 @@ function startGame(level) {
   generateCards(words);
 }
 
-// Haal de juiste woordenlijst op
+// Haal woordenlijst op
 function getWords(level) {
   if (level === "makkelijk") return easyWords;
   if (level === "gemiddeld") return mediumWords;
@@ -74,12 +75,13 @@ function setupDifficultyButtons() {
   buttons.forEach(button => {
     button.addEventListener("click", () => {
       const level = button.dataset.level;
+      console.log(`Niveau geselecteerd: ${level}`);
       startGame(level);
     });
   });
 }
 
-// Genereer de kaarten
+// Genereer kaarten
 function generateCards(words) {
   const gameBoard = document.getElementById("game-board");
   gameBoard.innerHTML = "";
@@ -108,15 +110,17 @@ function generateCards(words) {
     card.addEventListener("click", () => flipCard(card));
     gameBoard.appendChild(card);
   });
+
+  console.log("Kaarten gegenereerd:", cards.length);
 }
 
 // Schud kaarten
-function shuffle(cards) {
-  for (let i = cards.length - 1; i > 0; i--) {
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [cards[i], cards[j]] = [cards[j], cards[i]];
+    [array[i], array[j]] = [array[j], array[i]];
   }
-  return cards;
+  return array;
 }
 
 // Kaart omdraaien
@@ -139,16 +143,12 @@ function checkMatch() {
   if (card1.dataset.value === card2.dataset.value) {
     card1.classList.add("matched");
     card2.classList.add("matched");
-    card1.removeEventListener("click", () => flipCard(card1));
-    card2.removeEventListener("click", () => flipCard(card2));
     matchedPairs++;
     flippedCards = [];
     updateProgress();
 
     if (matchedPairs === totalPairs) {
-      setTimeout(() => {
-        alert("Gefeliciteerd! Je hebt alle kaarten gematcht!");
-      }, 500);
+      setTimeout(() => alert("Gefeliciteerd! Je hebt alle kaarten gematcht!"), 500);
     }
   } else {
     setTimeout(() => {
@@ -161,7 +161,7 @@ function checkMatch() {
   lockBoard = false;
 }
 
-// Update de voortgangsbalk
+// Update voortgang
 function updateProgress() {
   const progressBar = document.getElementById("progress-bar");
   const progressText = document.getElementById("progress-text");
@@ -171,7 +171,7 @@ function updateProgress() {
   progressText.textContent = `Je hebt ${matchedPairs} van de ${totalPairs} paren gevonden!`;
 }
 
-// Voeg sneeuwvlokken toe
+// Voeg sneeuw toe
 function createSnowflakes() {
   const container = document.querySelector(".snow-container");
   for (let i = 0; i < 50; i++) {
