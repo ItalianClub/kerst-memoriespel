@@ -57,12 +57,12 @@ function startGame(level) {
   generateCards(words);
 }
 
-// Haal woorden op
+// Haal woordenlijst op
 function getWords(level) {
   if (level === "makkelijk") return easyWords;
   if (level === "gemiddeld") return mediumWords;
   if (level === "moeilijk") return hardWords;
-  return easyWords;
+  return easyWords; // Standaard naar makkelijk
 }
 
 // Genereer kaarten
@@ -131,12 +131,7 @@ function checkMatch() {
     flippedCards = [];
     updateProgress();
 
-    // Toon melding voor gevonden paar
-    setTimeout(() => {
-      alert(`Je hebt een match gevonden! ${card1.dataset.value}`);
-    }, 300);
-
-    // Controleer of het spel voltooid is
+    // Controleer of alle matches zijn gevonden
     if (matchedPairs === totalPairs) {
       setTimeout(() => {
         alert("Gefeliciteerd! Je hebt alle kaarten gematcht!");
