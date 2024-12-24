@@ -5,16 +5,17 @@
   box-sizing: border-box;
 }
 
+/* Algemene body-styling */
 body {
-  font-family: 'Nunito', sans-serif;
-  background-color: #ebe5dc;
+  font-family: 'Arial', sans-serif; /* Duidelijk en leesbaar lettertype */
+  background: #ebe5dc; /* Licht beige achtergrondkleur */
   color: #4d4d4d;
   text-align: center;
 }
 
-/* Header */
+/* Header styling */
 header {
-  background-color: #e6ded0;
+  background-color: #e6ded0; /* Lichte beige achtergrond */
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -26,7 +27,7 @@ header {
 
 h1 {
   font-size: 2.5em;
-  font-family: 'Great Vibes', cursive;
+  font-family: 'Great Vibes', cursive; /* Sierlijk lettertype voor de kerstthema */
   color: #9c1925;
   text-shadow: 2px 2px #e6ded0;
 }
@@ -57,7 +58,7 @@ h1 {
   font-weight: bold;
 }
 
-/* Timer */
+/* Timer styling */
 #timer-display {
   margin: 15px;
   font-size: 1.5em;
@@ -87,10 +88,10 @@ h1 {
   color: #9c1925;
 }
 
-/* Speelbord */
+/* Speelbord styling */
 #game-board {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr); /* 4 kolommen */
   gap: 15px;
   max-width: 600px;
   margin: 20px auto;
@@ -141,11 +142,12 @@ h1 {
   transform: rotateY(0deg);
 }
 
-/* Gematchte kaarten */
+/* Gematchte kaarten styling */
 .card.matched .back {
   background-color: #28a745;
   color: #ffffff;
   border: 2px solid #155724;
+  font-weight: bold;
 }
 
 /* Reflectiepagina */
@@ -203,10 +205,10 @@ h1 {
 /* Responsiviteit */
 @media (max-width: 600px) {
   #game-board {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr); /* 2 kolommen op kleinere schermen */
   }
 
   .card {
-    padding-bottom: 120%;
+    padding-bottom: 120%; /* Houd vierkante proporties */
   }
 }
