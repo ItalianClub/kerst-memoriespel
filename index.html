@@ -9,21 +9,21 @@
 <body>
   <!-- Header -->
   <header>
-    <img src="logo.png" alt="Logo Memory di Natale" class="logo">
+    <img src="logo.png" alt="Logo" class="logo">
     <h1>🎄 Memory di Natale 🎅</h1>
-    <p>Vind de juiste Italiaanse vertaling bij het Nederlandse woord!</p>
+    <p>Zoek de juiste Italiaanse vertaling bij het Nederlandse woord!</p>
   </header>
 
   <!-- Moeilijkheidsselectie -->
   <div class="difficulty-select">
     <h2>Kies een niveau:</h2>
-    <button data-level="makkelijk" class="difficulty-button">Makkelijk</button>
-    <button data-level="gemiddeld" class="difficulty-button">Gemiddeld</button>
-    <button data-level="moeilijk" class="difficulty-button">Moeilijk</button>
+    <button data-level="makkelijk">Makkelijk</button>
+    <button data-level="gemiddeld">Gemiddeld</button>
+    <button data-level="moeilijk">Moeilijk</button>
   </div>
 
   <!-- Timer -->
-  <div id="timer-display" aria-live="polite">Tijd: 120 seconden</div>
+  <div id="timer-display">Tijd: 120 seconden</div>
 
   <!-- Voortgangsbalk -->
   <div class="progress-container">
@@ -45,13 +45,13 @@
     <button id="reset-from-reflection">Speel opnieuw</button>
   </section>
 
-  <!-- Sneeuwanimatie -->
-  <div id="snow-container"></div>
-
   <!-- Footer -->
   <footer>
     <p>Buon divertimento met <strong>Memory di Natale</strong>!</p>
   </footer>
+
+  <!-- Sneeuwanimatie -->
+  <div class="snow-container"></div>
 
   <script src="script.js"></script>
 </body>
