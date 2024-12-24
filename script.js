@@ -1,4 +1,3 @@
-// Woordenlijsten
 const easyWords = [
   { word: "Kerstboom", translation: "albero" },
   { word: "Cadeau", translation: "regalo" },
@@ -41,78 +40,64 @@ const hardWords = [
 let flippedCards = [];
 let matchedPairs = 0;
 let totalPairs = 0;
-let timeLeft = 120;
 let timerInterval;
+let timeLeft;
 
-// Functie om woordenlijst op basis van niveau te halen
+// Haal woorden op basis van moeilijkheidsgraad
 function getWords(level) {
   if (level === "makkelijk") return easyWords;
   if (level === "gemiddeld") return mediumWords;
   if (level === "moeilijk") return hardWords;
-  return easyWords; // Standaard naar makkelijk
-}
-
-// Start sneeuwanimatie
-function initializeSnow() {
-  const snowContainer = document.getElementById("snow-container");
-
-  for (let i = 0; i < 100; i++) {
-    const snowflake = document.createElement("div");
-    snowflake.classList.add("snowflake");
-
-    snowflake.style.left = `${Math.random() * 100}vw`;
-    snowflake.style.animationDelay = `${Math.random() * 5}s`;
-    snowflake.style.animationDuration = `${5 + Math.random() * 5}s`;
-
-    snowContainer.appendChild(snowflake);
-  }
-  console.log("Sneeuwanimatie gestart.");
 }
 
 // Start het spel
 function startGame(level) {
-  clearInterval(timerInterval);
+  clearInterval(timerInterval); // Reset eventuele bestaande timer
   const words = getWords(level);
   const cards = shuffle(generateCards(words));
   const gameBoard = document.getElementById("game-board");
-  gameBoard.innerHTML = "";
+  gameBoard.innerHTML = ""; // Reset bord
   matchedPairs = 0;
   flippedCards = [];
   totalPairs = words.length;
-  timeLeft = 120;
-
-  console.log("Spel gestart met niveau:", level);
-  console.log("Totaal aantal paren:", totalPairs);
+  timeLeft = 120; // Tijdslimiet instellen
 
   updateTimerDisplay();
   timerInterval = setInterval(updateTimer, 1000);
 
+  // Maak kaarten
   cards.forEach(({ word, isTranslation }) => {
     const card = document.createElement("div");
     card.classList.add("card");
+
     const front = document.createElement("div");
     front.classList.add("front");
+
     const back = document.createElement("div");
     back.classList.add("back");
     back.textContent = isTranslation ? word.translation : word.word;
+
     card.append(front, back);
     gameBoard.appendChild(card);
+
+    // Stel de waarde in voor vergelijking
     card.dataset.value = isTranslation ? word.translation : word.word;
+
+    // Eventlistener voor het omdraaien
     card.addEventListener("click", () => flipCard(card));
   });
 
-  updateProgress(0);
-  console.log("Kaarten gegenereerd en toegevoegd aan speelbord.");
+  updateProgress(0); // Reset voortgangsbalk
+  initializeSnow(); // Voeg sneeuw toe
+  document.getElementById("reset-game").classList.remove("hidden");
 }
 
 // Genereer kaarten
 function generateCards(words) {
-  const cards = words.flatMap(({ word, translation }) => [
+  return words.flatMap(({ word, translation }) => [
     { word: { word, translation }, isTranslation: false },
     { word: { word, translation }, isTranslation: true }
   ]);
-  console.log("Kaarten gegenereerd:", cards);
-  return cards;
 }
 
 // Schud kaarten
@@ -121,7 +106,6 @@ function shuffle(array) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
-  console.log("Kaarten geschud.");
   return array;
 }
 
@@ -131,29 +115,23 @@ function flipCard(card) {
     card.classList.add("flipped");
     flippedCards.push(card);
 
-    console.log("Kaarten geflipt:", flippedCards.map(c => c.dataset.value));
-
     if (flippedCards.length === 2) {
       setTimeout(checkMatch, 800);
     }
-  } else {
-    console.log("Klik genegeerd: maximaal 2 kaarten tegelijk omdraaien.");
   }
 }
 
-// Controleer op match
+// Match controleren
 function checkMatch() {
   const [card1, card2] = flippedCards;
 
-  console.log("Controleer match tussen:", card1.dataset.value, "en", card2.dataset.value);
-
   if (card1.dataset.value === card2.dataset.value) {
-    card1.classList.add("matched");
-    card2.classList.add("matched");
     matchedPairs++;
     flippedCards = [];
-
-    console.log("Match gevonden! Totaal aantal matches:", matchedPairs);
+    card1.removeEventListener("click", () => flipCard(card1));
+    card2.removeEventListener("click", () => flipCard(card2));
+    card1.classList.add("matched");
+    card2.classList.add("matched");
 
     updateProgress(matchedPairs);
 
@@ -166,9 +144,18 @@ function checkMatch() {
       card1.classList.remove("flipped");
       card2.classList.remove("flipped");
       flippedCards = [];
-      console.log("Geen match. Kaarten teruggedraaid.");
-    }, 1000);
+    }, 800);
   }
+}
+
+// Voortgang bijwerken
+function updateProgress(matchedPairs) {
+  const progressBar = document.getElementById("progress-bar");
+  const progressText = document.getElementById("progress-text");
+  const progress = (matchedPairs / totalPairs) * 100;
+
+  progressBar.style.width = `${progress}%`;
+  progressText.textContent = `Je hebt ${matchedPairs} van de ${totalPairs} paren gevonden!`;
 }
 
 // Timer bijwerken
@@ -188,42 +175,31 @@ function updateTimerDisplay() {
   timerDisplay.textContent = `Tijd: ${timeLeft} seconden`;
 }
 
-// Voortgang bijwerken
-function updateProgress(matches) {
-  const progressBar = document.getElementById("progress-bar");
-  progressBar.style.width = `${(matches / totalPairs) * 100}%`;
-
-  console.log("Voortgang bijgewerkt. Matches:", matches, "/", totalPairs);
-}
-
 // Reflectiepagina tonen
 function showReflection() {
   const reflection = document.getElementById("reflection");
   const learnedList = document.getElementById("learned-words");
-  const cards = document.querySelectorAll(".card.matched");
+  const cards = document.querySelectorAll(".card");
 
   learnedList.innerHTML = Array.from(cards)
+    .filter(card => card.classList.contains("flipped"))
     .map(card => `<li>${card.dataset.value}</li>`)
     .join("");
   reflection.classList.remove("hidden");
-  console.log("Reflectiepagina weergegeven. Woorden geleerd:", learnedList.innerHTML);
 }
 
-// Resetfunctionaliteit toevoegen
+// Voeg reset-functionaliteit toe
 document.getElementById("reset-game").addEventListener("click", () => {
-  console.log("Spel wordt opnieuw gestart.");
-  startGame("makkelijk");
+  const level = document.querySelector(".difficulty-select button.active")?.dataset.level || "makkelijk";
+  startGame(level);
 });
 
 document.getElementById("reset-from-reflection").addEventListener("click", () => {
-  console.log("Reflectiepagina gereset. Nieuw spel gestart.");
   startGame("makkelijk");
   document.getElementById("reflection").classList.add("hidden");
 });
 
-// Start sneeuw en spel bij het laden van de pagina
+// Start het spel bij het laden van de pagina
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("Pagina geladen. Start sneeuw en spel.");
-  initializeSnow();
   startGame("makkelijk");
 });
