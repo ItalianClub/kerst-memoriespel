@@ -1,9 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Start het spel automatisch op het "makkelijk" niveau
   startGame("makkelijk");
+  createSnowflakes();
 });
 
-// Woordenlijsten voor elk niveau
+// Woordenlijsten
 const easyWords = [
   { word: "Kerstboom", translation: "albero" },
   { word: "Cadeau", translation: "regalo" },
@@ -47,38 +47,35 @@ let flippedCards = [];
 let matchedPairs = 0;
 let totalPairs = 0;
 
-// Start het spel met het geselecteerde niveau
+// Start het spel
 function startGame(level) {
   const words = getWords(level);
-  totalPairs = words.length; // Aantal te vinden paren
-  matchedPairs = 0; // Reset het aantal matches
-  flippedCards = []; // Reset open kaarten
-  updateProgress(); // Reset de voortgangsbalk
-  generateCards(words); // Dynamisch kaarten genereren
+  totalPairs = words.length;
+  matchedPairs = 0;
+  flippedCards = [];
+  updateProgress();
+  generateCards(words);
 }
 
-// Haal woorden op per niveau
+// Haal woorden op
 function getWords(level) {
   if (level === "makkelijk") return easyWords;
   if (level === "gemiddeld") return mediumWords;
   if (level === "moeilijk") return hardWords;
-  return easyWords; // Standaardniveau
+  return easyWords;
 }
 
-// Dynamisch kaarten genereren
+// Genereer kaarten
 function generateCards(words) {
   const gameBoard = document.getElementById("game-board");
-  gameBoard.innerHTML = ""; // Reset het speelbord
+  gameBoard.innerHTML = "";
 
-  // Maak een array van alle kaartenparen
   const cards = words.flatMap(({ word, translation }) => [
     { value: word, isTranslation: false },
     { value: translation, isTranslation: true }
   ]);
 
-  const shuffledCards = shuffleCards(cards);
-
-  shuffledCards.forEach(({ value }) => {
+  shuffle(cards).forEach(({ value }) => {
     const card = document.createElement("div");
     card.className = "card";
 
@@ -92,16 +89,15 @@ function generateCards(words) {
     card.appendChild(front);
     card.appendChild(back);
 
-    card.dataset.value = value; // Zet de waarde voor herkenning
+    card.dataset.value = value;
 
-    card.addEventListener("click", () => flipCard(card)); // Voeg klikfunctionaliteit toe
-
+    card.addEventListener("click", () => flipCard(card));
     gameBoard.appendChild(card);
   });
 }
 
-// Schud kaarten willekeurig
-function shuffleCards(cards) {
+// Schud kaarten
+function shuffle(cards) {
   for (let i = cards.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [cards[i], cards[j]] = [cards[j], cards[i]];
@@ -116,12 +112,12 @@ function flipCard(card) {
     flippedCards.push(card);
 
     if (flippedCards.length === 2) {
-      setTimeout(checkMatch, 800); // Controleer de match na 800ms
+      setTimeout(checkMatch, 800);
     }
   }
 }
 
-// Controleer of twee kaarten een match vormen
+// Controleer of er een match is
 function checkMatch() {
   const [card1, card2] = flippedCards;
 
@@ -130,17 +126,21 @@ function checkMatch() {
     matchedPairs++;
     card1.classList.add("matched");
     card2.classList.add("matched");
-
-    // Maak kaarten niet meer klikbaar
     card1.removeEventListener("click", () => flipCard(card1));
     card2.removeEventListener("click", () => flipCard(card2));
-
     flippedCards = [];
     updateProgress();
 
-    // Controleer of alle paren zijn gevonden
+    // Toon melding voor gevonden paar
+    setTimeout(() => {
+      alert(`Je hebt een match gevonden! ${card1.dataset.value}`);
+    }, 300);
+
+    // Controleer of het spel voltooid is
     if (matchedPairs === totalPairs) {
-      setTimeout(() => alert("Gefeliciteerd! Je hebt alle kaarten gematcht!"), 500);
+      setTimeout(() => {
+        alert("Gefeliciteerd! Je hebt alle kaarten gematcht!");
+      }, 500);
     }
   } else {
     // Geen match, draai kaarten terug
@@ -162,15 +162,15 @@ function updateProgress() {
   progressText.textContent = `Je hebt ${matchedPairs} van de ${totalPairs} paren gevonden!`;
 }
 
-// Moeilijkheidsselectie
-document.querySelectorAll(".level-button").forEach(button => {
-  button.addEventListener("click", () => {
-    const level = button.dataset.level;
-    startGame(level);
-  });
-});
-
-// Reset-functionaliteit
-document.getElementById("reset-game").addEventListener("click", () => {
-  startGame("makkelijk");
-});
+// Voeg sneeuw toe
+function createSnowflakes() {
+  const container = document.querySelector(".snow-container");
+  for (let i = 0; i < 50; i++) {
+    const snowflake = document.createElement("div");
+    snowflake.className = "snowflake";
+    snowflake.style.left = `${Math.random() * 100}vw`;
+    snowflake.style.animationDelay = `${Math.random() * 5}s`;
+    snowflake.style.animationDuration = `${5 + Math.random() * 5}s`;
+    container.appendChild(snowflake);
+  }
+}
